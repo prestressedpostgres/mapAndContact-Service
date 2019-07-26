@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const mongoUri = process.env.MONGO_CONNECTION || 'mongodb://localhost:27017/FEC';
-const Restaurant= require('./restaurant.js')
+const mongoUri = 'mongodb://localhost:27017/FEC';
+const Restaurant = require('./restaurant.js').Restaurant
 
 mongoose.connect(mongoUri, { useNewUrlParser: true })
 // .catch((err)=>{mongoose.connect(mongoUri, { useNewUrlParser: true })})
@@ -15,7 +15,6 @@ const findRestaurantData = (restaurant,cb) => {
       .then((restaurantResult) => {
         return cb(restaurantResult)
       });
-  
   };
 
 
