@@ -1,1713 +1,247 @@
 const db  = require('./index.js');
-const Restaurant = require('./restaurant.js');
+const databaseSave = require('./restaurant.js')
+var Fakerator = require("fakerator");
+var fakerator = Fakerator("de-DE");
+const Restaurant = require('./restaurant.js').Restaurant;
 
-const restaurantData = [
-      {
-        name: "CENTRO",
-        address: "950 Pearl St, Boulder, CO 80302",
-        phone: "(303)442-7771",
-        website: "https://www.centromexican.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/centro-mexican-kitchen-boulder",
-        hoursOpen: {
-          Monday: ['07:30-22:00'],
-          Tuesday: ['07:30-22:00'],
-          Wednesday: ['07:30-22:00'],
-          Thursday: ['07:30-22:00'],
-          Friday: ['07:30-22:30'],
-          Saturday: ['10:00-22:30'],
-          Sunday: ['10:00-21:00']
-        }
-      },
-      {
-        name: "JULEP",
-        address: "3258 Larimer St, Denver, CO 80205",
-        phone: "(303)-295-8977",
-        website: "https://www.juleprino.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/julep-denver",
-        hoursOpen: {
-          Monday: [''],
-          Tuesday: [''],
-          Wednesday: ['17:00-22:00'],
-          Thursday: ['17:00-22:00'],
-          Friday: ['16:00-23:00'],
-          Saturday: ['11:00-23:00'],
-          Sunday: ['10:00-15:00']
-        }
-      },
-      {
-        name: "DIO MIO",
-        address: "3264 Larimer St, Denver, CO 80205",
-        phone: "(303)562-1965",
-        website: "https://www.diomiopasta.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['17:00-21:30'],
-          Tuesday: ['17:00-21:30'],
-          Wednesday: ['17:00-21:30'],
-          Thursday: ['17:00-21:30'],
-          Friday: ['17:00-22:00'],
-          Saturday: ['17:00-22:00'],
-          Sunday: ['']
-        }
-      },
-      {
-        name: "SAFTA",
-        address: "3330 Brighton Blvd, #201 Denver, CO 80216",
-        phone: "(720)408-2444",
-        website: "https://www.eatwithsafta.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: [''],
-          Tuesday: [''],
-          Wednesday: ['11:00-14:30','17:00-22:00'],
-          Thursday: ['11:00-14:30','17:00-22:00'],
-          Friday: ['11:00-14:30','17:00-23:00'],
-          Saturday: ['10:00-14:30','17:00-23:00'],
-          Sunday: ['10:00-14:30','17:00-22:00']
-        }
-      },
-      {
-        name: "BARTACO",
-        address: "1048 Pearl St, Ste. 101 Boulder, CO 80302",
-        phone: "(719)249-8226",
-        website: "https://www.bartaco/location.boulder.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:00-0:00'],
-          Tuesday: ['11:00-0:00'],
-          Wednesday: ['11:00-0:00'],
-          Thursday: ['11:00-0:00'],
-          Friday: ['11:00-0:00'],
-          Saturday: ['11:00-0:00'],
-          Sunday: ['11:00-0:00']
-        }
-      },
-      {
-        name: "BRASSERIE TEN TEN",
-        address: "1011 Walnut St, Boulder, CO 80302",
-        phone: "(303)998-1010",
-        website: "https://www.brasserietenten.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/brassierie-ten-ten-boulder",
-        hoursOpen: {
-          Monday: ['11:00-22:00'],
-          Tuesday: ['11:00-22:00'],
-          Wednesday: ['11:00-22:00'],
-          Thursday: ['11:00-22:00'],
-          Friday: ['11:00-23:00'],
-          Saturday: ['09:00-23:00'],
-          Sunday: ['09:00-21:00']
-        }
-      },
-      {
-        name: "RVER & WOODS",
-        address: "2328 Pearl St, Boulder, CO 80302",
-        phone: "(303)993-6301",
-        website: "https://www.riverandwoodsboulder.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/river-and-woods-restaurant-boulder",
-        hoursOpen: {
-          Monday: [''],
-          Tuesday: ['11:00-14:00', '16:00-22:00'],
-          Wednesday: ['11:00-14:00', '16:00-22:00'],
-          Thursday: ['11:00-14:00', '16:00-22:00'],
-          Friday: ['11:00-14:00', '16:00-22:00'],
-          Saturday: ['09:30-13:30', '17:00-22:00'],
-          Sunday: ['09:30-13:30', '17:00-22:00']
-        }
-      },
-      {
-        name: "THE MED",
-        address: "1002 Walnut St, Boulder, CO 80302",
-        phone: "(303)444-5335",
-        website: "https://www.themedboulder.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/the-mediterranean",
-        hoursOpen: {
-          Monday: ['11:00-22:00'],
-          Tuesday: ['11:00-22:00'],
-          Wednesday: ['11:00-22:00'],
-          Thursday: ['11:00-22:00'],
-          Friday: ['11:00-23:00'],
-          Saturday: ['11:00-23:00'],
-          Sunday: ['11:00-21:00']
-        }
-      },
-      {
-        name: "CHINA GOURMET",
-        address: "3970 N. Broadway, #102 Boulder, CO 80304",
-        phone: "(303)440-3500",
-        website: "https://www.chinagourmetmenu.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:30-21:00'],
-          Tuesday: ['11:30-21:00'],
-          Wednesday: ['11:30-21:00'],
-          Thursday: ['11:30-21:00'],
-          Friday: ['11:30-21:00'],
-          Saturday: ['16:30-21:00'],
-          Sunday: ['11:30-21:00']
-        }
-      },
-      {
-        name: "HAPA SUSHI",
-        address: "1117 Pearl St, Boulder, CO 80302",
-        phone: "(303)473-4730",
-        website: "https://www.hapasushi.com/pages/pearl-street-in-boulder",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/hapa-sushi-grill-and-sake-bar-pearl-st-boulder",
-        hoursOpen: {
-          Monday: ['11:00-22:00'],
-          Tuesday: ['11:00-22:00'],
-          Wednesday: ['11:00-22:00'],
-          Thursday: ['11:00-00:00'],
-          Friday: ['11:00-00:00'],
-          Saturday: ['11:00-00:00'],
-          Sunday: ['11:00-22:00']
-        }
-      },
-      {
-        name: "BOULDER CHOPHOUSE",
-        address: "921 Walnut St, Boulder, CO 80302",
-        phone: "(303)443-1188",
-        website: "https://www.boulderchophouse.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/boulder-chophouse-and-tavern-boulder",
-        hoursOpen: {
-          Monday: ['16:00-22:00'],
-          Tuesday: ['16:00-22:00'],
-          Wednesday: ['16:00-22:00'],
-          Thursday: ['16:00-22:00'],
-          Friday: ['16:00-23:00'],
-          Saturday: ['16:00-23:00'],
-          Sunday: ['16:00-22:00']
-        }
-      },
-      {
-        name: "SUSHI ZAN MAI",
-        address: "1221 Spruce St, Boulder, CO 80302",
-        phone: "(303)440-0743",
-        website: "https://www.sushizanmai.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:30-14:00','17:00-22:00'],
-          Tuesday: ['11:30-14:00','17:00-22:00'],
-          Wednesday: ['11:30-14:00','17:00-22:00'],
-          Thursday: ['11:30-14:00','17:00-22:00'],
-          Friday: ['11:30-14:00','17:00-22:00'],
-          Saturday: ['17:00-00:00'],
-          Sunday: ['17:00-22:00']
-        }
-      },
-      {
-        name: "DENVER CHOPHOUSE",
-        address: "1735 19th St, Ste. 100 Denver, CO 80202",
-        phone: "(303)296-0800",
-        website: "https://www.denverchophouse.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/denver-chophouse-denver",
-        hoursOpen: {
-          Monday: ['11:00-23:00'],
-          Tuesday: ['11:00-23:00'],
-          Wednesday: ['11:00-23:00'],
-          Thursday: ['11:00-23:00'],
-          Friday: ['11:00-00:00'],
-          Saturday: ['11:00-00:00'],
-          Sunday: ['11:00-22:00']
-        }
-      },
-      {
-        name: "TACOS TEQUILA WHISKEY",
-        address: "1514 York St, Denver, CO 80206",
-        phone: "(720)475-1337",
-        website: "https://www.tacostequilawhiskey.com/city-park-denver",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['15:00-22:00'],
-          Tuesday: ['11:00-22:00'],
-          Wednesday: ['11:00-22:00'],
-          Thursday: ['11:00-22:00'],
-          Friday: ['11:00-22:00'],
-          Saturday: ['11:00-22:00'],
-          Sunday: ['11:00-21:00']
-        }
-      },
-      {
-        name: "OHANA ISLAND KITCHEN",
-        address: "2563 15th #105 St, Denver, CO 80211",
-        phone: "(303)718-6580",
-        website: "https://www.ohanadenver.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:00-21:00'],
-          Tuesday: ['11:00-21:00'],
-          Wednesday: ['11:00-21:00'],
-          Thursday: ['11:00-21:00'],
-          Friday: ['11:00-21:00'],
-          Saturday: ['11:00-21:00'],
-          Sunday: ['']
-        }
-      },
-      {
-        name: "ROCKY FIN POKE BAR",
-        address: "1245 E. Colfax Ave, #103 Denver, CO 80218",
-        phone: "(303)861-1188",
-        website: "https://www.rockyfinpoke.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:00-21:00'],
-          Tuesday: ['11:00-21:00'],
-          Wednesday: ['11:00-21:00'],
-          Thursday: ['11:00-21:00'],
-          Friday: ['11:00-21:00'],
-          Saturday: ['11:00-21:00'],
-          Sunday: ['11:00-21:00']
-        }
-      },
-      {
-        name: "Community",
-        address: "206 S. Public Rd, Lafayette, CO 80026",
-        phone: "(720)890-3793",
-        website: "https://www.eatatcommunity.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['16:00-21:00'],
-          Tuesday: ['16:00-21:00'],
-          Wednesday: ['16:00-21:00'],
-          Thursday: ['16:00-22:00'],
-          Friday: ['11:00-22:00'],
-          Saturday: ['11:00-22:00'],
-          Sunday: ['11:00-21:00']
-        }
-      },
-      {
-        name: "RIOJA",
-        address: "1431 Larimer St, Denver, CO 80202",
-        phone: "303-442-7771",
-        website: "https://www.riojadenver.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/rioja-denver",
-        hoursOpen: {
-          Monday: ['17:00-22:00'],
-          Tuesday: ['17:00-22:00'],
-          Wednesday: ['11:30-14:30','17:00-22:00'],
-          Thursday: ['11:30-14:30','17:00-22:00'],
-          Friday: ['11:30-14:30','17:00-23:00'],
-          Saturday: ['10:00-14:30','17:00-23:00'],
-          Sunday: ['10:00-14:30','17:00-22:00']
-        }
-      },
-      {
-        name: "OAK",
-        address: "1400 Pearl St, Boulder, CO 80302",
-        phone: "(303)444-3622",
-        website: "https://www.oakatfourteenth.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:30-22:00'],
-          Tuesday: ['11:30-22:00'],
-          Wednesday: ['11:30-22:00'],
-          Thursday: ['11:30-22:00'],
-          Friday: ['11:30-22:00'],
-          Saturday: ['11:30-22:00'],
-          Sunday: ['17:30-22:00']
-        }
-      },
-      {
-        name: "THE KITCHEN",
-        address: "1039 Pearl St, Boulder, CO 80302",
-        phone: "(303)544-5973",
-        website: "https://www.thekitchenbistros.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:00-21:00'],
-          Tuesday: ['11:00-22:00'],
-          Wednesday: ['11:00-22:00'],
-          Thursday: ['11:00-22:00'],
-          Friday: ['11:00-22:00'],
-          Saturday: ['10:00-22:00'],
-          Sunday: ['10:00-21:00']
-        }
-      },
-      {
-        name: "DARK HORSE",
-        address: "2922 Baseline Rd, Boulder, CO 80303",
-        phone: "(303)442-8162",
-        website: "https://www.darkhorsebar.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:00-02:00'],
-          Tuesday: ['11:00-02:00'],
-          Wednesday: ['11:00-02:00'],
-          Thursday: ['11:00-02:00'],
-          Friday: ['11:00-02:00'],
-          Saturday: ['11:00-02:00'],
-          Sunday: ['09:00-02:00']
-        }
-      },
-      {
-        name: "ACREAGE",
-        address: "1380 Horizon Ave, Lafayette, CO 80026",
-        phone: "(303)227-3243",
-        website: "https://www.acreageco.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['15:00-21:00'],
-          Tuesday: ['15:00-21:00'],
-          Wednesday: ['15:00-21:00'],
-          Thursday: ['15:00-21:00'],
-          Friday: ['15:00-21:00'],
-          Saturday: ['12:00-21:00'],
-          Sunday: ['12:00-21:00']
-        }
-      },
-      {
-        name: "TAVERNETTA",
-        address: "1889 16th St, Denver, CO 80202",
-        phone: "(720)605-1889",
-        website: "https://www.tavernettadenver.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:00-22:00'],
-          Tuesday: ['11:00-22:00'],
-          Wednesday: ['11:00-22:00'],
-          Thursday: ['11:00-22:00'],
-          Friday: ['11:00-23:00'],
-          Saturday: ['12:00-23:00'],
-          Sunday: ['12:00-22:00']
-        }
-      },
-      {
-        name: "OSTERIA MARCO",
-        address: "1453 Larimer St, Denver, CO 80202",
-        phone: "(303)534-5855",
-        website: "https://www.osteriamarco.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/osteria-marco-denver",
-        hoursOpen: {
-          Monday: ['11:00-22:00'],
-          Tuesday: ['11:00-22:00'],
-          Wednesday: ['11:00-22:00'],
-          Thursday: ['11:00-22:00'],
-          Friday: ['11:00-23:00'],
-          Saturday: ['11:00-23:00'],
-          Sunday: ['11:00-22:00']
-        }
-      },
-      {
-        name: "RACINES",
-        address: "650 Sherman St, Denver, CO 80203",
-        phone: "(303)595-0418",
-        website: "https://www.racinesrestaruant.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['07:00-22:00'],
-          Tuesday: ['07:00-22:00'],
-          Wednesday: ['07:00-22:00'],
-          Thursday: ['07:00-22:00'],
-          Friday: ['07:00-23:00'],
-          Saturday: ['08:00-23:00'],
-          Sunday: ['08:00-22:00']
-        }
-      },
-      {
-        name: "LINGER",
-        address: "2030 W. 30th Ave, Denver, CO 80211",
-        phone: "(303)993-3120",
-        website: "https://www.lingerdenver.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/linger-denver",
-        hoursOpen: {
-          Monday: ['16:00-22:00'],
-          Tuesday: ['11:30-14:30','16:00-22:00'],
-          Wednesday: ['11:30-14:30','16:00-22:00'],
-          Thursday: ['11:30-14:30','16:00-22:00'],
-          Friday: ['11:30-14:30','16:00-23:00'],
-          Saturday: ['10:00-14:30','17:00-23:00'],
-          Sunday: ['10:00-14:30','17:00-22:00']
-        }
-      },
-      {
-        name: "RIO GRANDE",
-        address: "1101 Walnut St, Boulder, CO 80302",
-        phone: "(303)444-3690",
-        website: "https://www.riograndemexican.com/locations/boulder",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/rio-grande-mexican-restaurant-boulder",
-        hoursOpen: {
-          Monday: ['11:00-21:00'],
-          Tuesday: ['11:00-22:00'],
-          Wednesday: ['11:00-22:00'],
-          Thursday: ['11:00-23:00'],
-          Friday: ['11:00-23:00'],
-          Saturday: ['11:00-23:00'],
-          Sunday: ['11:00-21:00']
-        }
-      },
-      {
-        name: "MCDEVITT TACO SUPPLY",
-        address: "4800 Baseline Rd, Unit C-110 Boulder, CO 80302",
-        phone: "(720)573-4194",
-        website: "https://www.mcdevitttacosupply.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:30-21:00'],
-          Tuesday: ['11:30-21:00'],
-          Wednesday: ['11:30-21:00'],
-          Thursday: ['11:30-21:00'],
-          Friday: ['11:30-22:00'],
-          Saturday: ['11:30-22:00'],
-          Sunday: ['11:30-21:00']
-        }
-      },
-      {
-        name: "SANITAS BREWING COMPANY",
-        address: "3550 Frontier Ave, unit A, Boulder, CO 80301",
-        phone: "(303)442-4130",
-        website: "https://www.sanitasbrewing.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:30-22:00'],
-          Tuesday: ['11:30-22:00'],
-          Wednesday: ['11:30-22:00'],
-          Thursday: ['11:30-22:00'],
-          Friday: ['11:30-22:00'],
-          Saturday: ['11:30-22:00'],
-          Sunday: ['11:30-21:00']
-        }
-      },
-      {
-        name: "BOULDER BEER COMPANY",
-        address: "2880 Wilderness Pl, Boulder, CO 80301",
-        phone: "(303)444-8448",
-        website: "https://www.boulderbeer.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:00-22:00'],
-          Tuesday: ['11:00-22:00'],
-          Wednesday: ['11:00-22:00'],
-          Thursday: ['11:00-22:00'],
-          Friday: ['11:00-22:00'],
-          Saturday: ['11:00-22:00'],
-          Sunday: ['11:00-22:00']
-        }
-      },
-      {
-        name: "AVERY BREWING COMPANY",
-        address: "4910 Nautilus Ct N, Boulder, CO 80301",
-        phone: "(303)440-4324",
-        website: "https://www.averybrewing.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['15:00-22:00'],
-          Tuesday: ['11:30-22:00'],
-          Wednesday: ['11:30-22:00'],
-          Thursday: ['11:30-23:00'],
-          Friday: ['11:30-23:00'],
-          Saturday: ['11:30-23:00'],
-          Sunday: ['11:30-22:00']
-        }
-      },
-      {
-        name: "ARCANA",
-        address: "909 Walnut St, Boulder, CO 80302",
-        phone: "(303)444-3885",
-        website: "https://www.arcanarestaurant.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['16:00-21:00'],
-          Tuesday: ['16:00-22:00'],
-          Wednesday: ['16:00-22:00'],
-          Thursday: ['16:00-22:00'],
-          Friday: ['16:00-22:00'],
-          Saturday: ['10:00-14:30','16:00-22:00'],
-          Sunday: ['10:00-14:30', '16:00-21:00']
-        }
-      },
-      {
-        name: "BRU HANDBUILT ALES & EATS",
-        address: "5290 Arapahoe Ave, Boulder, CO 80303",
-        phone: "(720)638-5193",
-        website: "https://www.bruboulder.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:30-22:00'],
-          Tuesday: ['11:30-22:00'],
-          Wednesday: ['11:30-22:00'],
-          Thursday: ['11:30-22:00'],
-          Thursday: ['11:30-22:00'],
-          Friday: ['11:30-22:00'],
-          Saturday: ['11:30-22:00'],
-          Sunday: ['11:30-21:00']
-        }
-      },
-      {
-        name: "VIA PEARLA",
-        address: "901 Pearl St, Boulder, CO 80302",
-        phone: "(720)669-0100",
-        website: "https://www.viapearla.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/via-pearla-boulder",
-        hoursOpen: {
-          Monday: ['11:00-22:00'],
-          Tuesday: ['11:00-22:00'],
-          Wednesday: ['11:00-22:00'],
-          Thursday: ['11:00-22:00'],
-          Friday: ['11:00-23:00'],
-          Saturday: ['11:00-23:00'],
-          Sunday: ['15:00-21:00']
-        }
-      },
-      {
-        name: "SNOOZE AN A.M. EATERY",
-        address: "1617 Pearl St, Boulder, CO 80302",
-        phone: "(303)225-7344",
-        website: "https://www.snoozeeatery.com/locations/boco",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['07:00-15:00'],
-          Tuesday: ['07:00-15:00'],
-          Wednesday: ['07:00-15:00'],
-          Thursday: ['07:00-15:00'],
-          Friday: ['07:00-15:00'],
-          Saturday: ['07:00-15:00'],
-          Sunday: ['07:00-15:00']
-        }
-      },
-      {
-        name: "SNOOZE AN A.M. EATERY",
-        address: "2262 Larimer St, Denver, CO 80205",
-        phone: "(303)297-0700",
-        website: "https://www.snoozeeatery.com/locations/ballpark",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['06:30-14:30'],
-          Tuesday: ['06:30-14:30'],
-          Wednesday: ['06:30-14:30'],
-          Thursday: ['06:30-14:30'],
-          Friday: ['06:30-14:30'],
-          Saturday: ['06:30-14:30'],
-          Sunday: ['06:30-14:30']
-        }
-      },
-      {
-        name: "THE POST BREWING CO. - BOULDER",
-        address: "2027 13th St, Boulder, CO 80302",
-        phone: "(720)372-3341",
-        website: "https://www.postbrewing.com/boulder",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/the-post-brewing-co-boulder",
-        hoursOpen: {
-          Monday: ['11:00-21:00'],
-          Tuesday: ['11:00-21:00'],
-          Wednesday: ['11:00-21:00'],
-          Thursday: ['11:00-21:00'],
-          Friday: ['11:00-22:00'],
-          Saturday: ['10:00-22:00'],
-          Sunday: ['10:00-21:00']
-        }
-      },
-      {
-        name: "THE POST BREWING CO. - LAFAYETTE",
-        address: "105 W. Emma St, Lafayette, CO 80026",
-        phone: "(303)593-2066",
-        website: "https://www.postbrewing.com/lafayette",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/the-post-brewing-co-lafayette",
-        hoursOpen: {
-          Monday: ['11:00-21:00'],
-          Tuesday: ['11:00-21:00'],
-          Wednesday: ['11:00-21:00'],
-          Thursday: ['11:00-21:00'],
-          Friday: ['11:00-22:00'],
-          Saturday: ['10:00-22:00'],
-          Sunday: ['10:00-21:00']
-        }
-      },
-      {
-        name: "THE YELLOW DELI",
-        address: "908 Pearl St, Boulder, CO 80302",
-        phone: "(303)996-4700",
-        website: "https://www.yellowdeli.com/boulder",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['00:00-00:00'],
-          Tuesday: ['00:00-00:00'],
-          Wednesday: ['00:00-00:00'],
-          Thursday: ['00:00-00:00'],
-          Friday: ['00:00-15:00'],
-          Saturday: [''],
-          Sunday: ['12:00-00:00']
-        }
-      },
-      {
-        name: "THE POST BREWING CO. - LONGMONT",
-        address: "1258 South Hover Rd, Longmont, CO 80501",
-        phone: "(720)588-2883",
-        website: "https://www.postbrewing.com/longmont",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/the-post-brewing-co-longmont",
-        hoursOpen: {
-          Monday: ['11:00-21:00'],
-          Tuesday: ['11:00-21:00'],
-          Wednesday: ['11:00-21:00'],
-          Thursday: ['11:00-21:00'],
-          Friday: ['11:00-22:00'],
-          Saturday: ['10:00-22:00'],
-          Sunday: ['10:00-21:00']
-        }
-      },
-      {
-        name: "SALT",
-        address: "1047 Pearl St, Boulder, CO 80302",
-        phone: "(303)444-7258",
-        website: "https://www.saltthebistro.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/salt-boulder",
-        hoursOpen: {
-          Monday: ['11:00-21:00'],
-          Tuesday: ['11:00-21:00'],
-          Wednesday: ['11:00-21:00'],
-          Thursday: ['11:00-21:00'],
-          Friday: ['11:00-22:00'],
-          Saturday: ['11:00-22:00'],
-          Sunday: ['10:00-21:00']
-        }
-      },
-      {
-        name: "GB FISH AND CHIPS",
-        address: "1311 Broadway, Denver, CO 80210",
-        phone: "(720)570-5103",
-        website: "https://www.gbfishandchips.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:00-21:00'],
-          Tuesday: ['11:00-21:00'],
-          Wednesday: ['11:00-21:00'],
-          Thursday: ['11:00-21:00'],
-          Friday: ['11:00-22:00'],
-          Saturday: ['11:00-22:00'],
-          Sunday: ['11:00-21:00']
-        }
-      },
-      {
-        name: "PINTS PUB - BRITISH GASTRO BREWPUB",
-        address: "221 W 13th Ave, Denver, CO 80204",
-        phone: "(303)534-7543",
-        website: "https://www.pintspub.com",
-        openTable: true,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:00-22:00'],
-          Tuesday: ['11:00-22:00'],
-          Wednesday: ['11:00-22:00'],
-          Thursday: ['11:00-22:00'],
-          Friday: ['11:00-00:00'],
-          Saturday: ['11:00-00:00'],
-          Sunday: ['11:00-20:00']
-        }
-      },
-      {
-        name: "CUBA CUBA CAFE & BAR",
-        address: "1173 Delaware St, Denver, CO 80204",
-        phone: "(303)605-2822",
-        website: "https://www.cubacubacafe.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['17:00-22:00'],
-          Tuesday: ['17:00-22:00'],
-          Wednesday: ['17:00-22:00'],
-          Thursday: ['17:00-22:00'],
-          Friday: ['17:00-22:30'],
-          Saturday: ['17:00-22:30'],
-          Sunday: ['']
-        }
-      },
-      {
-        name: "MIZUNA",
-        address: "3504, 225 E 7th St, Denver, CO 80203",
-        phone: "(303)832-4778",
-        website: "https://www.mizunadenver.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/mizuna-denver",
-        hoursOpen: {
-          Monday: [''],
-          Tuesday: ['17:00-22:00'],
-          Wednesday: ['17:00-22:00'],
-          Thursday: ['17:00-22:00'],
-          Friday: ['17:00-22:00'],
-          Saturday: ['17:00-22:00'],
-          Sunday: ['']
-        }
-      },
-      {
-        name: "THE FAINTING GOAT",
-        address: "846 Broadway, Denver, CO 80203",
-        phone: "(303)945-2323",
-        website: "https://www.thefaintinggoatdenver.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:00-02:00'],
-          Tuesday: ['11:00-02:00'],
-          Wednesday: ['11:00-02:00'],
-          Thursday: ['11:00-02:00'],
-          Friday: ['11:00-02:00'],
-          Saturday: ['10:00-02:00'],
-          Sunday: ['10:00-02:00']
-        }
-      },
-      {
-        name: "TABLE 6",
-        address: "609 Corona St, Denver, CO 80218",
-        phone: "(303)831-8800",
-        website: "https://www.table6denver.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/table-6",
-        hoursOpen: {
-          Monday: ['17:00-22:00'],
-          Tuesday: ['17:00-22:00'],
-          Wednesday: ['17:00-22:00'],
-          Thursday: ['17:00-22:00'],
-          Friday: ['17:00-23:00'],
-          Saturday: ['17:00-23:00'],
-          Sunday: ['10:30-14:00','17:00-21:00']
-        }
-      },
-      {
-        name: "FRUITION RESTAURANT",
-        address: "1313 6th Ave, Denver, CO 80218",
-        phone: "(303)831-1962",
-        website: "https://www.fruitionrestaurant.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['17:00-22:00'],
-          Tuesday: ['17:00-22:00'],
-          Wednesday: ['17:00-22:00'],
-          Thursday: ['17:00-22:00'],
-          Friday: ['17:00-22:00'],
-          Saturday: ['17:00-22:00'],
-          Sunday: ['17:00-21:00']
-        }
-      },
-      {
-        name: "SUSHI DEN",
-        address: "1487 S Pearl St, Denver, CO 80210",
-        phone: "(303)777-0826",
-        website: "https://www.sushiden.net",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:30-14:30','16:45-22:30'],
-          Tuesday: ['11:30-14:30','16:45-22:30'],
-          Wednesday: ['11:30-14:30','16:45-22:30'],
-          Thursday: ['11:30-14:30','16:45-22:30'],
-          Friday: ['11:30-14:30','16:45-23:00'],
-          Saturday: ['16:30-23:00'],
-          Sunday: ['17:00-22:30']
-        }
-      },
-      {
-        name: "IZAKAYA DEN",
-        address: "1487A S Pearl St, Denver, CO 80210",
-        phone: "(303)777-0691",
-        website: "https://www.izakayaden.net",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['17:00-22:00'],
-          Tuesday: ['17:00-22:00'],
-          Wednesday: ['17:00-22:00'],
-          Thursday: ['17:00-22:00'],
-          Friday: ['17:00-23:00'],
-          Saturday: ['11:30-14:30','17:00-23:00'],
-          Sunday: ['']
-        }
-      },
-      {
-        name: "OTOTO",
-        address: "1501 S Pearl St, Denver, CO 80210",
-        phone: "(303)733-2503",
-        website: "https://www.ototoden.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: [''],
-          Tuesday: [''],
-          Wednesday: ['16:30-22:00'],
-          Thursday: ['16:30-22:00'],
-          Friday: ['16:30-23:00'],
-          Saturday: ['16:30-23:00'],
-          Sunday: ['11:30-14:30','16:30-21:00']
-        }
-      },
-      {
-        name: "VENICE ITALIAN RESTAURANT",
-        address: "5946 S Holly St, Greenwood Village, CO 80111",
-        phone: "(720)482-9191",
-        website: "https://www.veniceristorante.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:00-14:00','17:00-22:00'],
-          Tuesday: ['11:00-14:00','17:00-22:00'],
-          Wednesday: ['11:00-14:00','17:00-22:00'],
-          Thursday: ['11:00-14:00','17:00-22:00'],
-          Friday: ['11:00-14:00','17:00-22:00'],
-          Saturday: ['17:00-22:00'],
-          Sunday: ['17:00-22:00']
-        }
-      },
-      {
-        name: "MERCANTILE DINING AND PROVISIONS",
-        address: "1701 Wynkoop St #155, Denver, CO 80202",
-        phone: "(720)460-3733",
-        website: "https://www.mercantiledenver.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['07:00-22:00'],
-          Tuesday: ['07:00-22:00'],
-          Wednesday: ['07:00-22:00'],
-          Thursday: ['07:00-22:00'],
-          Friday: ['07:00-22:00'],
-          Saturday: ['07:00-22:00'],
-          Sunday: ['07:00-22:00']
-        }
-      },
-      {
-        name: "VILLAGE COFFEE SHOP",
-        address: "6717 Folsom St, Boulder, CO 80302",
-        phone: "(303)442-9689",
-        website: "https://www.villagecoffeeshopboulder.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['05:30-15:00'],
-          Tuesday: ['05:30-15:00'],
-          Wednesday: ['05:30-15:00'],
-          Thursday: ['05:30-15:00'],
-          Friday: ['05:30-15:00'],
-          Saturday: ['05:30-14:30'],
-          Sunday: ['07:00-14:30']
-        }
-      },
-      {
-        name: "THE PARKWAY CAFE",
-        address: "4700 Pearl St, #4 Boulder, CO 80301",
-        phone: "(303)447-1833",
-        website: "https://www.boulderbreakfast.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['07:00-15:00'],
-          Tuesday: ['07:00-15:00'],
-          Wednesday: ['07:00-15:00'],
-          Thursday: ['07:00-15:00'],
-          Friday: ['07:00-15:00'],
-          Saturday: ['07:00-14:00'],
-          Sunday: ['08:00-13:00']
-        }
-      },
-      {
-        name: "LUCKY'S CAFE",
-        address: "3980 Broadway, Boulder, CO 80304",
-        phone: "(303)444-5007",
-        website: "https://www.luckysmarket.com/luckys-cafe",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['07:00-14:00'],
-          Tuesday: ['07:00-14:00'],
-          Wednesday: ['07:00-14:00'],
-          Thursday: ['07:00-14:00'],
-          Friday: ['07:00-14:00'],
-          Saturday: ['07:00-14:00'],
-          Sunday: ['07:00-14:00']
-        }
-      },
-      {
-        name: "SAM'S NO.3",
-        address: "1500 Curtis St, Denver, CO 80202",
-        phone: "(303)534-1927",
-        website: "https://www.samsno3.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['05:30-22:00'],
-          Tuesday: ['05:30-22:00'],
-          Wednesday: ['05:30-22:00'],
-          Thursday: ['05:30-23:00'],
-          Friday: ['05:30-00:00'],
-          Saturday: ['07:00-00:00'],
-          Sunday: ['07:00-22:00']
-        }
-      },
-      {
-        name: "OFFICERS CLUB",
-        address: "84 Rampart Way, Denver, CO 80230",
-        phone: "(303)284-0714",
-        website: "https://www.officersclublowry.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:00-22:00'],
-          Tuesday: ['11:00-22:00'],
-          Wednesday: ['11:00-22:00'],
-          Thursday: ['11:00-22:00'],
-          Friday: ['11:00-23:00'],
-          Saturday: ['10:00-23:00'],
-          Sunday: ['10:00-21:00']
-        }
-      },
-      {
-        name: "DENVER BISCUIT COMPANY",
-        address: "3237 E. Colfax Ave, Denver, CO 80206",
-        phone: "(303)377-7900",
-        website: "https://www.denbisco.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['08:00-14:00'],
-          Tuesday: ['08:00-14:00'],
-          Wednesday: ['08:00-14:00'],
-          Thursday: ['08:00-14:00'],
-          Friday: ['08:00-14:00'],
-          Saturday: ['08:00-15:00'],
-          Sunday: ['08:00-15:00']
-        }
-      },
-      {
-        name: "ANNETTE",
-        address: "2501 Dallas St, #108 Aurora, CO 80010",
-        phone: "(720)710-9975",
-        website: "https://www.annettesscratchtotable.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: [''],
-          Tuesday: ['15:00-22:00'],
-          Wednesday: ['15:00-22:00'],
-          Thursday: ['15:00-22:00'],
-          Friday: ['15:00-22:00'],
-          Saturday: ['10:00-22:00'],
-          Sunday: ['10:00-14:00']
-        }
-      },
-      {
-        name: "BEAST AND BOTTLE",
-        address: "719 E. 17th Ave, Denver, CO 80203",
-        phone: "(303)623-3223",
-        website: "https://www.beastandbottle.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/beast-and-bottle",
-        hoursOpen: {
-          Monday: ['17:00-21:00'],
-          Tuesday: ['17:00-21:00'],
-          Wednesday: ['17:00-21:00'],
-          Thursday: ['17:00-21:00'],
-          Friday: ['17:00-22:00'],
-          Saturday: ['10:00-14:00','17:00-22:00'],
-          Sunday: ['10:00=14:00','17:00-21:00']
-        }
-      },
-      {
-        name: "STAR KITCHEN",
-        address: "2917 W. Mississippi Ave, Denver, CO 80219",
-        phone: "(303)936-0089",
-        website: "https://www.starkitchenseafooddimsum.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['10:30-21:30'],
-          Tuesday: ['10:30-21:30'],
-          Wednesday: [''],
-          Thursday: ['10:30-21:30'],
-          Friday: ['10:30-22:00'],
-          Saturday: ['10:00-22:00'],
-          Sunday: ['10:00-21:30']
-        }
-      },
-      {
-        name: "OPHELIA'S ELECTRIC SOAP BOX",
-        address: "1215 20th St, Denver, CO 80202",
-        phone: "(303)993-8023",
-        website: "https://www.opheliasdenver.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/ophelias-electric-soapbox",
-        hoursOpen: {
-          Monday: ['16:00-00:00'],
-          Tuesday: ['16:00-00:00'],
-          Wednesday: ['16:00-00:00'],
-          Thursday: ['16:00-01:00'],
-          Friday: ['11:00-14:00','16:00-01:00'],
-          Saturday: ['10:00-01:00'],
-          Sunday: ['10:00-14:30','17:00-00:00']
-        }
-      },
-      {
-        name: "QUALITY ITALIAN",
-        address: "241 Columbine St, Denver, CO 80206",
-        phone: "(303)532-8888",
-        website: "https://www.qualityitalian.com/denver-menu",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/quality-italian-denver-2",
-        hoursOpen: {
-          Monday: ['11:00-22:00'],
-          Tuesday: ['11:00-22:00'],
-          Wednesday: ['11:00-22:00'],
-          Thursday: ['11:00-22:00'],
-          Friday: ['11:00-23:00'],
-          Saturday: ['10:30-23:00'],
-          Sunday: ['10:30-22:00']
-        }
-      },
-      {
-        name: "TOKYO PREMIUM BAKERY",
-        address: "1540 S. Pearl St, Denver, CO 80210",
-        phone: "(720)531-3784",
-        website: "https://www.tokyopremiumbakery.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: [''],
-          Tuesday: ['06:00-16:00'],
-          Wednesday: ['06:00-16:00'],
-          Thursday: ['06:00-16:00'],
-          Friday: ['06:00-18:00'],
-          Saturday: ['06:00-18:00'],
-          Sunday: ['06:00-16:00']
-        }
-      },
-      {
-        name: "YANNI'S GREEK RESTAURANT",
-        address: "1951, 5425 Landmark Pl, Greenwood Village, CO 80111",
-        phone: "(303)692-0404",
-        website: "https://www.yannisdenver.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: [''],
-          Tuesday: ['11:00-22:00'],
-          Wednesday: ['11:00-22:00'],
-          Thursday: ['11:00-22:00'],
-          Friday: ['11:00-22:00'],
-          Saturday: ['11:00-22:00'],
-          Sunday: ['16:00-21:00']
-        }
-      },
-      {
-        name: "THE SINK",
-        address: "1165 13th St, Boulder, CO 80302",
-        phone: "(303)444-7465",
-        website: "https://www.thesink.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:00-22:00'],
-          Tuesday: ['11:00-22:00'],
-          Wednesday: ['11:00-22:00'],
-          Thursday: ['11:00-22:00'],
-          Friday: ['11:00-23:00'],
-          Saturday: ['11:00-23:00'],
-          Sunday: ['11:30-22:00']
-        }
-      },
-      {
-        name: "BIKER JIM'S",
-        address: "2148 Larimer St, Denver, CO 80205",
-        phone: "(720)746-9355",
-        website: "https://www.bikerjimsdogs.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:00-22:00'],
-          Tuesday: ['11:00-22:00'],
-          Wednesday: ['11:00-22:00'],
-          Thursday: ['11:00-22:00'],
-          Friday: ['11:00-03:00'],
-          Saturday: ['11:00-03:00'],
-          Sunday: ['11:00-22:00']
-        }
-      },
-      {
-        name: "THE LOBBY",
-        address: "2191 Arapahoe St, Denver, CO 80205",
-        phone: "(303)997-9911",
-        website: "https://www.thelobbydenver.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/the-lobby-denver",
-        hoursOpen: {
-          Monday: ['08:00-18:00'],
-          Tuesday: ['08:00-18:00'],
-          Wednesday: ['08:00-18:00'],
-          Thursday: ['08:00-18:00'],
-          Friday: ['08:00-18:00'],
-          Saturday: ['08:00-18:00'],
-          Sunday: ['08:00-16:30']
-        }
-      },
-      {
-        name: "ELWAY'S",
-        address: "1881 Curtis St, Denver, CO 80202",
-        phone: "(303)312-3107",
-        website: "http://www.ritzcarlton.com/en/hotels/colorado/denver/dining/elways-downtown",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/elways-downtown",
-        hoursOpen: {
-          Monday: ['06:30-22:00'],
-          Tuesday: ['06:30-22:00'],
-          Wednesday: ['06:30-22:00'],
-          Thursday: ['06:30-22:00'],
-          Friday: ['06:30-22:00'],
-          Saturday: ['06:30-22:00'],
-          Sunday: ['06:30-21:00']
-        }
-      },
-      {
-        name: "THE CAPITAL GRILL",
-        address: "1450 Larimer St, Denver, CO 80202",
-        phone: "(303)539-2500",
-        website: "https://www.thecapitalgrille.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/the-capital-grille-denver",
-        hoursOpen: {
-          Monday: ['11:00-22:00'],
-          Tuesday: ['11:00-22:00'],
-          Wednesday: ['11:00-22:00'],
-          Thursday: ['11:00-22:00'],
-          Friday: ['11:00-23:00'],
-          Saturday: ['16:30-23:00'],
-          Sunday: ['16:00-21:00']
-        }
-      },
-      {
-        name: "OCEAN PRIME",
-        address: "1465 Larimer St, Denver, CO 80202",
-        phone: "(303)825-3663",
-        website: "https://www.ocean-prime.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/ocean-prime-denver",
-        hoursOpen: {
-          Monday: ['11:30-22:00'],
-          Tuesday: ['11:30-22:00'],
-          Wednesday: ['11:30-22:00'],
-          Thursday: ['11:30-22:00'],
-          Friday: ['11:30-23:00'],
-          Saturday: ['16:00-23:00'],
-          Sunday: ['16:00-21:00']
-        }
-      },
-      {
-        name: "THIRSTY LION GASTROPUB - UNION STATION",
-        address: "1605 Wynkoop St, Denver, CO 80202",
-        phone: "(303)623-0316",
-        website: "https://www.thirstyliongastropub.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/thirsty-lion-gastropub-and-grill-denver",
-        hoursOpen: {
-          Monday: ['11:00-23:00'],
-          Tuesday: ['11:00-23:00'],
-          Wednesday: ['11:00-23:00'],
-          Thursday: ['11:00-23:00'],
-          Friday: ['11:00-00:00'],
-          Saturday: ['10:00-00:00'],
-          Sunday: ['10:00-23:00']
-        }
-      },
-      {
-        name: "MELLOW MUSHROOM",
-        address: "1201 16th St, #108 Denver, CO 80302",
-        phone: "(720)328-9114",
-        website: "https://www.mellowmushroom.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:00-22:00'],
-          Tuesday: ['11:00-22:00'],
-          Wednesday: ['11:00-22:00'],
-          Thursday: ['11:00-22:00'],
-          Friday: ['11:00-00:00'],
-          Saturday: ['11:00-00:00'],
-          Sunday: ['11:00-22:00']
-        }
-      },
-      {
-        name: "RIALTO CAFE",
-        address: "934 16th St, Denver, CO 80302",
-        phone: "(303)893-2233",
-        website: "https://www.rialtocafe.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/rialto-cafe",
-        hoursOpen: {
-          Monday: ['06:30-22:00'],
-          Tuesday: ['06:30-22:00'],
-          Wednesday: ['06:30-22:00'],
-          Thursday: ['06:30-22:00'],
-          Friday: ['06:30-23:00'],
-          Saturday: ['08:00-23:00'],
-          Sunday: ['08:00-22:00']
-        }
-      },
-      {
-        name: "FRASCA FOOD AND WINE",
-        address: "1738 Pearl St, Boulder, CO 80302",
-        phone: "(303)442-6966",
-        website: "https://www.frascafoodandwine.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['17:30-21:30'],
-          Tuesday: ['17:30-21:30'],
-          Wednesday: ['17:30-21:30'],
-          Thursday: ['17:30-21:30'],
-          Friday: ['17:30-21:30'],
-          Saturday: ['17:00-22:30'],
-          Sunday: ['']
-        }
-      },
-      {
-        name: "IL PASTAIO RISTORANTE",
-        address: "3075 Arapahoe Ave, Boulder, CO 80303",
-        phone: "(303)447-9572",
-        website: "https://www.ilpastaioboulder.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:00-21:00'],
-          Tuesday: ['11:00-21:00'],
-          Wednesday: ['11:00-21:00'],
-          Thursday: ['11:00-21:00'],
-          Friday: ['11:00-22:00'],
-          Saturday: [''],
-          Sunday: ['']
-        }
-      },
-      {
-        name: "SFORNO TRATTORIA ROMANA",
-        address: "1308 Pearl St, Boulder, CO 80302",
-        phone: "(303)449-1787",
-        website: "https://www.sfornoboulder.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/sforno-trattoria",
-        hoursOpen: {
-          Monday: ['11:00-22:00'],
-          Tuesday: ['11:00-22:00'],
-          Wednesday: ['11:00-22:00'],
-          Thursday: ['11:00-22:00'],
-          Friday: ['11:00-23:00'],
-          Saturday: ['11:00-23:00'],
-          Sunday: ['11:00-22:00']
-        }
-      },
-      {
-        name: "ELLYNGTON'S",
-        address: "321 17th St, Denver, CO 80202",
-        phone: "(303)297-3111",
-        website: "https://www.brownpalace.com/dining/restaurants/ellyngtons",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/ellyngtons-at-the-brown-palace",
-        hoursOpen: {
-          Monday: ['06:30-11:00','11:30-13:30'],
-          Tuesday: ['06:30-11:00','11:30-13:30'],
-          Wednesday: ['06:30-11:00','11:30-13:30'],
-          Thursday: ['06:30-11:00','11:30-13:30'],
-          Friday: ['06:30-11:00','11:30-13:30'],
-          Saturday: ['07:00-09:00'],
-          Sunday: ['07:00-09:00']
-        }
-      },
-      {
-        name: "PARK & CO",
-        address: "439 E 17th Ave, Denver, CO 80203",
-        phone: "(720)328-6732",
-        website: "https://www.parkandcodenver.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:00-22:00'],
-          Tuesday: ['11:00-22:00'],
-          Wednesday: ['11:00-22:00'],
-          Thursday: ['11:00-22:00'],
-          Friday: ['11:00-00:00'],
-          Saturday: ['10:00-00:00'],
-          Sunday: ['10:00-22:00']
-        }
-      },
-      {
-        name: "CITY GRILLE ",
-        address: "321 E Colfax Ave, Dener, CO 80302",
-        phone: "(303)861-0726",
-        website: "https://www.citygrille.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:00-22:00'],
-          Tuesday: ['11:00-22:00'],
-          Wednesday: ['11:00-22:00'],
-          Thursday: ['11:00-22:00'],
-          Friday: ['11:00-22:00'],
-          Saturday: ['11:00-22:00'],
-          Sunday: ['11:00-22:00']
-        }
-      },
-      {
-        name: "TORCHY'S TACOS",
-        address: "1085 N Broadway, Denver, CO 80203",
-        phone: "(303)436-1704",
-        website: "https://www.torchystacos.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['07:00-22:00'],
-          Tuesday: ['07:00-22:00'],
-          Wednesday: ['07:00-22:00'],
-          Thursday: ['07:00-22:00'],
-          Friday: ['07:00-23:00'],
-          Saturday: ['08:00-23:00'],
-          Sunday: ['08:00-22:00']
-        }
-      },
-      {
-        name: "FLAGSTAFF HOUSE",
-        address: "1138 Flagstaff Rd, Boulder, CO 80302",
-        phone: "(303)442-4640",
-        website: "https://www.flagstaffhouse.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['18:00-22:00'],
-          Tuesday: ['18:00-22:00'],
-          Wednesday: ['18:00-22:00'],
-          Thursday: ['18:00-22:00'],
-          Friday: ['17:30-22:00'],
-          Saturday: ['17:00-22:00'],
-          Sunday: ['17:30-22:00']
-        }
-      },
-      {
-        name: "BLACK CAT",
-        address: "1964 13th St, Boulder, CO 80302",
-        phone: "(303)444-5500",
-        website: "https://www.blackcatboulder.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/black-cat",
-        hoursOpen: {
-          Monday: ['17:30-21:30'],
-          Tuesday: ['17:30-21:30'],
-          Wednesday: ['17:30-21:30'],
-          Thursday: ['17:30-21:30'],
-          Friday: ['17:30-21:30'],
-          Saturday: ['17:30-21:30'],
-          Sunday: ['17:30-21:30']
-        }
-      },
-      {
-        name: "NEXT DOOR",
-        address: "1035 Pearl St, Boulder, CO 80302",
-        phone: "(720)542-8159",
-        website: "https://www.nextdooreatery.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:00-22:00'],
-          Tuesday: ['11:00-22:00'],
-          Wednesday: ['11:00-22:00'],
-          Thursday: ['11:00-22:00'],
-          Friday: ['11:00-23:00'],
-          Saturday: ['11:00-23:00'],
-          Sunday: ['11:00-22:00']
-        }
-      },
-      {
-        name: "CURRY N KEBOB",
-        address: "3050 28th St, Boulder, CO 80301",
-        phone: "(720)328-4696",
-        website: "https://www.currynkebob.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['11:00-14:30', '17:00-21:30'],
-          Tuesday: ['11:00-14:30', '17:00-21:30'],
-          Wednesday: ['11:00-14:30', '17:00-21:30'],
-          Thursday: ['11:00-14:30', '17:00-21:30'],
-          Friday: ['11:00-14:30', '17:00-21:30'],
-          Saturday: ['11:00-14:30', '17:00-21:30'],
-          Sunday: ['11:00-14:30', '17:00-21:30']
-        }
-      },
-      {
-        name: "JAPANGO",
-        address: "1136 Pearl St, Boulder, CO 80302",
-        phone: "(303)938-0330",
-        website: "https://www.boulderjapango.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/jpango-sushi-restaurant",
-        hoursOpen: {
-          Monday: ['11:00-22:00'],
-          Tuesday: ['11:00-22:00'],
-          Wednesday: ['11:00-22:00'],
-          Thursday: ['11:00-22:00'],
-          Friday: ['11:00-00:00'],
-          Saturday: ['11:00-00:00'],
-          Sunday: ['11:00-22:00']
-        }
-      },
-      {
-        name: "WILD STANDARD",
-        address: "1043 Pearl St, Boulder, CO 80302",
-        phone: "(720)638-4800",
-        website: "https://www.wildstandard.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/wild-standard",
-        hoursOpen: {
-          Monday: ['16:00-21:00'],
-          Tuesday: ['16:00-21:00'],
-          Wednesday: ['16:00-21:00'],
-          Thursday: ['16:00-21:00'],
-          Friday: ['11:00-22:00'],
-          Saturday: ['11:00-22:00'],
-          Sunday: ['11:00-21:00']
-        }
-      },
-      {
-        name: "ZOLO SOUTHWESTERN GRILL",
-        address: "2525 Arapahoe Ave, Boulder, CO 80302",
-        phone: "(303)449-0444",
-        website: "https://www.zologrill.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/zolo-grill",
-        hoursOpen: {
-          Monday: ['11:00-21:00'],
-          Tuesday: ['11:00-21:00'],
-          Wednesday: ['11:00-21:00'],
-          Thursday: ['11:00-21:00'],
-          Friday: ['11:00-22:00'],
-          Saturday: ['10:00-22:00'],
-          Sunday: ['10:00-21:00']
-        }
-      },
-      {
-        name: "JAX FISHOUSE & OYSTER BAR - BOULDER",
-        address: "928 Pearl St, Boulder, CO 80302",
-        phone: "(303)444-1811",
-        website: "https://www.jaxfishhouse.com/boulder",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/jax-fish-house-and-oyster-bar-boulder",
-        hoursOpen: {
-          Monday: ['16:00-22:00'],
-          Tuesday: ['16:00-22:00'],
-          Wednesday: ['16:00-22:00'],
-          Thursday: ['16:00-22:00'],
-          Friday: ['16:00-23:00'],
-          Saturday: ['16:00-23:00'],
-          Sunday: ['16:00-21:00']
-        }
-      },
-      {
-        name: "THE WEST END TAVERN",
-        address: "926 Pearl St, Boulder, CO 80302",
-        phone: "(303)444-3535",
-        website: "https://www.thewestendtavern.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/west-end-tavern",
-        hoursOpen: {
-          Monday: ['11:00-22:00'],
-          Tuesday: ['11:00-22:00'],
-          Wednesday: ['11:00-22:00'],
-          Thursday: ['11:00-23:00'],
-          Friday: ['11:00-23:00'],
-          Saturday: ['10:00-23:00'],
-          Sunday: ['10:00-22:00']
-        }
-      },
-      {
-        name: "THE BOULDER DUSHANBE TEAHOUSE",
-        address: "1770 13th St, Boulder, CO 80302",
-        phone: "(303)442-4993",
-        website: "https://www.boulderteahouse.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['08:00-21:00'],
-          Tuesday: ['08:00-21:00'],
-          Wednesday: ['08:00-21:00'],
-          Thursday: ['08:00-21:00'],
-          Friday: ['08:00-21:00'],
-          Saturday: ['08:00-21:00'],
-          Sunday: ['08:00-21:00']
-        }
-      },
-      {
-        name: "HUMBOLDT FARM, FISH, WINE",
-        phone: "(303)813-1700",
-        website: "https://www.humboldtrestaurant.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/humboldt-farm-fish-wine",
-        hoursOpen: {
-          Monday: ['11:00-21:00'],
-          Tuesday: ['11:00-21:00'],
-          Wednesday: ['11:00-21:00'],
-          Thursday: ['11:00-21:00'],
-          Friday: ['11:00-22:00'],
-          Saturday: ['11:00-22:00'],
-          Sunday: ['10:00-15:00','16:00-21:00']
-        }
-      },
-      {
-        name: "ACORN",
-        address: "3350 Brighton Blvd, Denver, CO 80216",
-        phone: "(720)542-3721",
-        website: "https://www.denveracorn.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: [''],
-          Tuesday: ['11:30-22:00'],
-          Wednesday: ['11:30-22:00'],
-          Thursday: ['11:30-22:00'],
-          Friday: ['11:30-22:00'],
-          Saturday: ['11:30-22:00'],
-          Sunday: ['11:30-22:00']
-        }
-      },
-      {
-        name: "BANG UP TO THE ELEPHANT!",
-        address: "1310 Pearl St, Denver CO 80203",
-        phone: "(303)792-4949",
-        website: "https://www.banguptotheelephant.restaurant",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/mighty-sparrow-and-the-sea-maiden",
-        hoursOpen: {
-          Monday: ['08:00-23:00'],
-          Tuesday: ['08:00-23:00'],
-          Wednesday: ['08:00-23:00'],
-          Thursday: ['08:00-01:00'],
-          Friday: ['08:00-01:00'],
-          Saturday: ['08:00-00:00'],
-          Sunday: ['08:00-23:00']
-        }
-      },
-      {
-        name: "ALOY MODERN THAI",
-        address: "2134 Larimer St, Denver, CO 80205",
-        phone: "(303)379-9759",
-        website: "https://www.aloymodernthai.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/aloy-modern-thai-denver",
-        hoursOpen: {
-          Monday: ['11:00-21:30'],
-          Tuesday: ['11:00-21:30'],
-          Wednesday: ['11:00-21:30'],
-          Thursday: ['11:00-21:30'],
-          Friday: ['11:00-22:00'],
-          Saturday: ['12:00-22:00'],
-          Sunday: ['12:00-21:30']
-        }
-      },
-      {
-        name: "THE POPULIST",
-        address: "3163 Larimer St, Denver, CO 80205",
-        phone: "(720)432-3163",
-        website: "https://www.thepopulistdenver.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/the-populist",
-        hoursOpen: {
-          Monday: [''],
-          Tuesday: ['17:00-22:00'],
-          Wednesday: ['17:00-22:00'],
-          Thursday: ['17:00-22:00'],
-          Friday: ['17:00-22:00'],
-          Saturday: ['17:00-22:00'],
-          Sunday: ['']
-        }
-      },
-      {
-        name: "MORIN",
-        address: "1600 15th St, Denver, CO 80202",
-        phone: "(303)623-0534",
-        website: "https://www.morindenver.com",
-        openTable: true,
-        openTableLink: "https://www.opentable.com/r/morin-denver",
-        hoursOpen: {
-          Monday: [''],
-          Tuesday: ['15:00-22:00'],
-          Wednesday: ['15:00-22:00'],
-          Thursday: ['15:00-22:00'],
-          Friday: ['15:00-23:00'],
-          Saturday: ['15:00-23:00'],
-          Sunday: ['']
-        }
-      },
-      {
-        name: "RYE SOCIETY",
-        address: "3090 Larimer St, Denver, CO 80205",
-        phone: "(303)593-2713",
-        website: "https://www.ryesociety.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: ['09:00-15:00'],
-          Tuesday: ['09:00-15:00'],
-          Wednesday: ['09:00-15:00'],
-          Thursday: ['09:00-15:00'],
-          Friday: ['09:00-15:00'],
-          Saturday: ['09:00-15:00'],
-          Sunday: ['09:00-15:00']
-        }
-      },
-      {
-        name: "BECKON",
-        address: "2843 Larimer St, Denver, CO 80205",
-        phone: "(303)749-0020",
-        website: "https://www.beckon-call.com",
-        openTable: false,
-        openTableLink: "",
-        hoursOpen: {
-          Monday: [''],
-          Tuesday: [''],
-          Wednesday: ['17:30-11:30'],
-          Thursday: ['17:30-11:30'],
-          Friday: ['17:30-11:30'],
-          Saturday: ['17:30-11:30'],
-          Sunday: ['']
-        }
+function capFirst(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function generateName(){
+var name1 = ["abandoned","able","absolute","adorable","adventurous","academic","acceptable","acclaimed","accomplished","accurate",
+"aching","acidic","acrobatic","active","actual","adept","admirable","admired","adolescent","adorable","adored","advanced",
+"afraid","affectionate","aged","aggravating","aggressive","agile","agitated","agonizing","agreeable","ajar","alarmed","alarming",
+"alert","alienated","alive","all","altruistic","amazing","ambitious","ample","amused","amusing","anchored","ancient","angelic","angry",
+"anguished","animated","annual","another","antique","anxious","any","apprehensive","appropriate","apt","arctic","arid","aromatic","artistic",
+"ashamed","assured","astonishing","athletic","attached","attentive","attractive","austere","authentic","authorized","automatic","avaricious",
+"average","aware","awesome","awful","awkward","babyish","bad","back","baggy","bare","barren","basic","beautiful","belated","beloved","beneficial",
+"better","best","bewitched","big","big-hearted","biodegradable","bite-sized","bitter","black","black-and-white","bland","blank","blaring","bleak","blind",
+"blissful","blond","blue","blushing","bogus","boiling","bold","bony","boring","bossy","both","bouncy","bountiful","bowed","brave","breakable","brief","bright",
+"brilliant","brisk","broken","bronze","brown","bruised","bubbly","bulky","bumpy","buoyant","burdensome","burly","bustling","busy","buttery","buzzing","calculating",
+"calm","candid","canine","capital","carefree","careful","careless","caring","cautious","cavernous","celebrated","charming","cheap","cheerful","cheery","chief","chilly",
+"chubby","circular","classic","clean","clear","clear-cut","clever","close","closed","cloudy","clueless","clumsy","cluttered","coarse","cold","colorful","colorless","colossal",
+"comfortable","common","compassionate","competent","complete","complex","complicated","composed","concerned","concrete","confused","conscious","considerate","constant","content",
+"conventional","cooked","cool","cooperative","coordinated","corny","corrupt","costly","courageous","courteous","crafty","crazy","creamy","creative","creepy","criminal","crisp",
+"critical","crooked","crowded","cruel","crushing","cuddly","cultivated","cultured","cumbersome","curly","curvy","cute","cylindrical","damaged","damp","dangerous","dapper","daring",
+"darling","dark","dazzling","dead","deadly","deafening","dear","dearest","decent","decimal","decisive","deep","defenseless","defensive","defiant","deficient","definite","definitive",
+"delayed","delectable","delicious","delightful","delirious","demanding","dense","dental","dependable","dependent","descriptive","deserted","detailed","determined","devoted",
+"different","difficult","digital","diligent","dim","dimpled","dimwitted","direct","disastrous","discrete","disfigured","disgusting","disloyal","dismal","distant",
+"downright","dreary","dirty","disguised","dishonest","dismal","distant","distinct","distorted","dizzy","dopey","doting","double","downright","drab","drafty","dramatic",
+"dreary","droopy","dry","dual","dull","dutiful","each","eager","earnest","early","easy","easy-going","ecstatic","edible","educated","elaborate","elastic","elated","elderly",
+"electric","elegant","elementary","elliptical","embarrassed","embellished","eminent","emotional","empty","enchanted","enchanting","energetic","enlightened","enormous","enraged",
+"entire","envious","equal","equatorial","essential","esteemed","ethical","euphoric","even","evergreen","everlasting","every","evil","exalted","excellent","exemplary",
+"exhausted","excitable","excited","exciting","exotic","expensive","experienced","expert","extraneous","extroverted","extra-large","extra-small","fabulous","failing",
+"faint","fair","faithful","fake","false","familiar","famous","fancy","fantastic","far","faraway","far-flung","far-off","fast","fat","fatal","fatherly","favorable",
+"favorite","fearful","fearless","feisty","feline","female","feminine","few","fickle","filthy","fine","finished","firm","first","firsthand","fitting","fixed","flaky",
+"flamboyant","flashy","flat","flawed","flawless","flickering","flimsy","flippant","flowery","fluffy","fluid","flustered","focused","fond","foolhardy","foolish","forceful",
+"forked","formal","forsaken","forthright","fortunate","fragrant","frail","frank","frayed","free","French","fresh","frequent","friendly","frightened","frightening",
+"frigid","frilly","frizzy","frivolous","front","frosty","frozen","frugal","fruitful","full","fumbling","functional","funny","fussy","fuzzy","gargantuan","gaseous",
+"general","generous","gentle","genuine","giant","giddy","gigantic","gifted","giving","glamorous","glaring","glass","gleaming","gleeful","glistening","glittering",
+"gloomy","glorious","glossy","glum","golden","good","good-natured","gorgeous","graceful","gracious","grand","grandiose","granular","grateful","grave","gray","great",
+"greedy","green","gregarious","grim","grimy","gripping","grizzled","gross","grotesque","grouchy","grounded","growing","growling","grown","grubby","gruesome","grumpy",
+"guilty","gullible","gummy","hairy","half","handmade","handsome","handy","happy","happy-go-lucky","hard","hard-to-find","harmful","harmless","harmonious","harsh",
+"hasty","hateful","haunting","healthy","heartfelt","hearty","heavenly","heavy","hefty","helpful","helpless","hidden","hideous","high","high-level","hilarious",
+"hoarse","hollow","homely","honest","honorable","honored","hopeful","horrible","hospitable","hot","huge","humble","humiliating","humming","humongous","hungry",
+"hurtful","husky","icky","icy","ideal","idealistic","identical","idle","idiotic","idolized","ignorant","ill","illegal","ill-fated","ill-informed","illiterate",
+"illustrious","imaginary","imaginative","immaculate","immaterial","immediate","immense","impassioned","impeccable","impartial","imperfect","imperturbable",
+"impish","impolite","important","impossible","impractical","impressionable","impressive","improbable","impure","inborn","incomparable","incompatible","incomplete",
+"inconsequential","incredible","indelible","inexperienced","indolent","infamous","infantile","infatuated","inferior","infinite","informal","innocent","insecure",
+"insidious","insignificant","insistent","instructive","insubstantial","intelligent","intent","intentional","interesting","internal","international","intrepid",
+"ironclad","irresponsible","irritating","itchy","jaded","jagged","jam-packed","jaunty","jealous","jittery","joint","jolly","jovial","joyful","joyous","jubilant",
+"judicious","juicy","jumbo","junior","jumpy","juvenile","kaleidoscopic","keen","key","kind","kindhearted","kindly","klutzy","knobby","knotty","knowledgeable","knowing",
+"known","kooky","kosher","lame","lanky","large","last","lasting","late","lavish","lawful","lazy","leading","lean","leafy","left","legal","legitimate","light","lighthearted",
+"likable","likely","limited","limp","limping","linear","lined","liquid","little","live","lively","livid","loathsome","lone","lonely","long","long-term","loose",
+"lopsided","lost","loud","lovable","lovely","loving","low","loyal","lucky","lumbering","luminous","lumpy","lustrous","luxurious","mad","made-up","magnificent",
+"majestic","major","male","mammoth","married","marvelous","masculine","massive","mature","meager","mealy","mean","measly","meaty","medical","mediocre","medium",
+"meek","mellow","melodic","memorable","menacing","merry","messy","metallic","mild","milky","mindless","miniature","minor","minty","miserable","miserly","misguided",
+"misty","mixed","modern","modest","moist","monstrous","monthly","monumental","moral","mortified","motherly","motionless","mountainous","muddy","muffled","multicolored",
+"mundane","murky","mushy","musty","muted","mysterious","naive","narrow","nasty","natural","naughty","nautical","near","neat","necessary","needy","negative","neglected",
+"negligible","neighboring","nervous","new","next","nice","nifty","nimble","nippy","nocturnal","noisy","nonstop","normal","notable","noted","noteworthy","novel","noxious",
+"numb","nutritious","nutty","obedient","obese","oblong","oily","oblong","obvious","occasional","odd","oddball","offbeat","offensive","official","old","old-fashioned",
+"only","open","optimal","optimistic","opulent","orange","orderly","organic","ornate","ornery","ordinary","original","other","our","outlying","outgoing","outlandish",
+"outrageous","outstanding","oval","overcooked","overdue","overjoyed","overlooked","palatable","pale","paltry","parallel","parched","partial","passionate","past","pastel",
+"peaceful","peppery","perfect","perfumed","periodic","perky","personal","pertinent","pesky","pessimistic","petty","phony","physical","piercing","pink","pitiful","plain",
+"plaintive","plastic","playful","pleasant","pleased","pleasing","plump","plush","polished","polite","political","pointed","pointless","poised","poor","popular","portly",
+"posh","positive","possible","potable","powerful","powerless","practical","precious","present","prestigious","pretty","precious","previous","pricey","prickly","primary",
+"prime","pristine","private","prize","probable","productive","profitable","profuse","proper","proud","prudent","punctual","pungent","puny","pure","purple","pushy","putrid",
+"puzzled","puzzling","quaint","qualified","quarrelsome","quarterly","queasy","querulous","questionable","quick","quick-witted","quiet","quintessential","quirky","quixotic",
+"quizzical","radiant","ragged","rapid","rare","rash","raw","recent","reckless","rectangular","ready","real","realistic","reasonable","red","reflecting","regal","regular",
+"reliable","relieved","remarkable","remorseful","remote","repentant","required","respectful","responsible","repulsive","revolving","rewarding","rich","rigid","right","ringed",
+"ripe","roasted","robust","rosy","rotating","rotten","rough","round","rowdy","royal","rubbery","rundown","ruddy","rude","runny","rural","rusty","sad","safe","salty","same",
+"sandy","sane","sarcastic","sardonic","satisfied","scaly","scarce","scared","scary","scented","scholarly","scientific","scornful","scratchy","scrawny","second","secondary",
+"second-hand","secret","self-assured","self-reliant","selfish","sentimental","separate","serene","serious","serpentine","several","severe","shabby","shadowy","shady","shallow",
+"shameful","shameless","sharp","shimmering","shiny","shocked","shocking","shoddy","short","short-term","showy","shrill","shy","sick","silent","silky","silly","silver","similar",
+"simple","simplistic","sinful","single","sizzling","skeletal","skinny","sleepy","slight","slim","slimy","slippery","slow","slushy","small","smart","smoggy","smooth","smug",
+"snappy","snarling","sneaky","sniveling","snoopy","sociable","soft","soggy","solid","somber","some","spherical","sophisticated","sore","sorrowful","soulful","soupy","sour",
+"Spanish","sparkling","sparse","specific","spectacular","speedy","spicy","spiffy","spirited","spiteful","splendid","spotless","spotted","spry","square","squeaky","squiggly",
+"stable","staid","stained","stale","standard","starchy","stark","starry","steep","sticky","stiff","stimulating","stingy","stormy","straight","strange","steel","strict",
+"strident","striking","striped","strong","studious","stunning","stupendous","stupid","sturdy","stylish","subdued","submissive","substantial","subtle","suburban","sudden",
+"sugary","sunny","super","superb","superficial","superior","supportive","sure-footed","surprised","suspicious","svelte","sweaty","sweet","sweltering","swift","sympathetic",
+"tall","talkative","tame","tan","tangible","tart","tasty","tattered","taut","tedious","teeming","tempting","tender","tense","tepid","terrible","terrific","testy","thankful",
+"that","these","thick","thin","third","thirsty","this","thorough","thorny","those","thoughtful","threadbare","thrifty","thunderous","tidy","tight","timely","tinted","tiny",
+"tired","torn","total","tough","traumatic","treasured","tremendous","tragic","trained","tremendous","triangular","tricky","trifling","trim","trivial","troubled","true",
+"trusting","trustworthy","trusty","truthful","tubby","turbulent","twin","ugly","ultimate","unacceptable","unaware","uncomfortable","uncommon","unconscious","understated",
+"unequaled","uneven","unfinished","unfit","unfolded","unfortunate","unhappy","unhealthy","uniform","unimportant","unique","united","unkempt","unknown","unlawful","unlined",
+"unlucky","unnatural","unpleasant","unrealistic","unripe","unruly","unselfish","unsightly","unsteady","unsung","untidy","untimely","untried","untrue","unused","unusual",
+"unwelcome","unwieldy","unwilling","unwitting","unwritten","upbeat","upright","upset","urban","usable","used","useful","useless","utilized","utter","vacant","vague","vain",
+"valid","valuable","vapid","variable","vast","velvety","venerated","vengeful","verifiable","vibrant","vicious","victorious","vigilant","vigorous","villainous","violet",
+"violent","virtual","virtuous","visible","vital","vivacious","vivid","voluminous","wan","warlike","warm","warmhearted","warped","wary","wasteful","watchful","waterlogged",
+"watery","wavy","wealthy","weak","weary","webbed","wee","weekly","weepy","weighty","weird","welcome","well-documented","well-groomed","well-informed","well-lit","well-made",
+"well-off","well-to-do","well-worn","wet","which","whimsical","whirlwind","whispered","white","whole","whopping","wicked","wide","wide-eyed","wiggly","wild","willing",
+"wilted","winding","windy","winged","wiry","wise","witty","wobbly","woeful","wonderful","wooden","woozy","wordy","worldly","worn","worried","worrisome","worse","worst",
+"worthless","worthwhile","worthy","wrathful","wretched","writhing","wrong","wry","yawning","yearly","yellow","yellowish","young","youthful","yummy","zany","zealous",
+"zesty","zigzag","rocky"];
+
+var name2 = ["people","history","way","art","world","information","map","family","government","health","system","computer","meat","year","thanks","music","person","reading",
+"method","data","food","understanding","theory","law","bird","literature","problem","software","control","knowledge","power","ability","economics","love","internet","television",
+"science","library","nature","fact","product","idea","temperature","investment","area","society","activity","story","industry","media","thing","oven","community","definition",
+"safety","quality","development","language","management","player","variety","video","week","security","country","exam","movie","organization","equipment","physics","analysis",
+"policy","series","thought","basis","boyfriend","direction","strategy","technology","army","camera","freedom","paper","environment","child","instance","month","truth","marketing",
+"university","writing","article","department","difference","goal","news","audience","fishing","growth","income","marriage","user","combination","failure","meaning","medicine",
+"philosophy","teacher","communication","night","chemistry","disease","disk","energy","nation","road","role","soup","advertising","location","success","addition","apartment",
+"education","math","moment","painting","politics","attention","decision","event","property","shopping","student","wood","competition","distribution","entertainment","office",
+"population","president","unit","category","cigarette","context","introduction","opportunity","performance","driver","flight","length","magazine","newspaper","relationship",
+"teaching","cell","dealer","debate","finding","lake","member","message","phone","scene","appearance","association","concept","customer","death","discussion","housing","inflation",
+"insurance","mood","woman","advice","blood","effort","expression","importance","opinion","payment","reality","responsibility","situation","skill","statement","wealth","application",
+"city","county","depth","estate","foundation","grandmother","heart","perspective","photo","recipe","studio","topic","collection","depression","imagination","passion","percentage",
+"resource","setting","ad","agency","college","connection","criticism","debt","description","memory","patience","secretary","solution","administration","aspect","attitude",
+"director","personality","psychology","recommendation","response","selection","storage","version","alcohol","argument","complaint","contract","emphasis","highway","loss",
+"membership","possession","preparation","steak","union","agreement","cancer","currency","employment","engineering","entry","interaction","limit","mixture","preference","region",
+"republic","seat","tradition","virus","actor","classroom","delivery","device","difficulty","drama","election","engine","football","guidance","hotel","match","owner","priority",
+"protection","suggestion","tension","variation","anxiety","atmosphere","awareness","bread","climate","comparison","confusion","construction","elevator","emotion","employee",
+"employer","guest","height","leadership","mall","manager","operation","recording","respect","sample","transportation","boring","charity","cousin","disaster","editor","efficiency",
+"excitement","extent","feedback","guitar","homework","leader","mom","outcome","permission","presentation","promotion","reflection","refrigerator","resolution","revenue","session",
+"singer","tennis","basket","bonus","cabinet","childhood","church","clothes","coffee","dinner","drawing","hair","hearing","initiative","judgment","lab","measurement","mode","mud",
+"orange","poetry","police","possibility","procedure","queen","ratio","relation","restaurant","satisfaction","sector","signature","significance","song","tooth","town","vehicle",
+"volume","wife","accident","airport","appointment","arrival","assumption","baseball","chapter","committee","conversation","database","enthusiasm","error","explanation","farmer",
+"gate","girl","hall","historian","hospital","injury","instruction","maintenance","manufacturer","meal","perception","pie","poem","presence","proposal","reception","replacement",
+"revolution","river","son","speech","tea","village","warning","winner","worker","writer","assistance","breath","buyer","chest","chocolate","conclusion","contribution","cookie",
+"courage","desk","drawer","establishment","examination","garbage","grocery","honey","impression","improvement","independence","insect","inspection","inspector","king","ladder",
+"menu","penalty","piano","potato","profession","professor","quantity","reaction","requirement","salad","sister","supermarket","tongue","weakness","wedding","affair","ambition",
+"analyst","apple","assignment","assistant","bathroom","bedroom","beer","birthday","celebration","championship","cheek","client","consequence","departure","diamond","dirt","ear",
+"fortune","friendship","funeral","gene","girlfriend","hat","indication","intention","lady","midnight","negotiation","obligation","passenger","pizza","platform","poet","pollution",
+"recognition","reputation","shirt","speaker","stranger","surgery","sympathy","tale","throat","trainer","uncle","youth","time","work","film","water","money","example","while",
+"business","study","game","life","form","air","day","place","number","part","field","fish","back","process","heat","hand","experience","job","book","end","point","type","home",
+"economy","value","body","market","guide","interest","state","radio","course","company","price","size","card","list","mind","trade","line","care","group","risk","word","fat",
+"force","key","light","training","name","school","top","amount","level","order","practice","research","sense","service","piece","web","boss","sport","fun","house","page","term",
+"test","answer","sound","focus","matter","kind","soil","board","oil","picture","access","garden","range","rate","reason","future","site","demand","exercise","image","case","cause",
+"coast","action","age","bad","boat","record","result","section","building","mouse","cash","class","period","plan","store","tax","side","subject","space","rule","stock","weather",
+"chance","figure","man","model","source","beginning","earth","program","chicken","design","feature","head","material","purpose","question","rock","salt","act","birth","car","dog",
+"object","scale","sun","note","profit","rent","speed","style","war","bank","craft","half","inside","outside","standard","bus","exchange","eye","fire","position","pressure",
+"stress","advantage","benefit","box","frame","issue","step","cycle","face","item","metal","paint","review","room","screen","structure","view","account","ball","discipline",
+"medium","share","balance","bit","black","bottom","choice","gift","impact","machine","shape","tool","wind","address","average","career","culture","morning","pot","sign","table",
+"task","condition","contact","credit","egg","hope","ice","network","north","square","attempt","date","effect","link","post","star","voice","capital","challenge","friend","self",
+"shot","brush","couple","exit","front","function","lack","living","plant","plastic","spot","summer","taste","theme","track","wing","brain","button","click","desire","foot","gas",
+"influence","notice","rain","wall","base","damage","distance","feeling","pair","savings","staff","sugar","target","text","animal","author","budget","discount","file","ground",
+"lesson","minute","officer","phase","reference","register","sky","stage","stick","title","trouble","bowl","bridge","campaign","character","club","edge","evidence","fan","letter",
+"lock","maximum","novel","option","pack","park","quarter","skin","sort","weight","baby","background","carry","dish","factor","fruit","glass","joint","master","muscle","red",
+"strength","traffic","trip","vegetable","appeal","chart","gear","ideal","kitchen","land","log","mother","net","party","principle","relative","sale","season","signal","spirit",
+"street","tree","wave","belt","bench","commission","copy","drop","minimum","path","progress","project","sea","south","status","stuff","ticket","tour","angle","blue","breakfast",
+"confidence","daughter","degree","doctor","dot","dream","duty","essay","father","fee","finance","hour","juice","luck","milk","mouth","peace","pipe","stable","storm","substance",
+"team","trick","afternoon","bat","beach","blank","catch","chain","consideration","cream","crew","detail","gold","interview","kid","mark","mission","pain","pleasure","score",
+"screw","sex","shop","shower","suit","tone","window","agent","band","bath","block","bone","calendar","candidate","cap","coat","contest","corner","court","cup","district","door",
+"east","finger","garage","guarantee","hole","hook","implement","layer","lecture","lie","manner","meeting","nose","parking","partner","profile","rice","routine","schedule",
+"swimming","telephone","tip","winter","airline","bag","battle","bed","bill","bother","cake","code","curve","designer","dimension","dress","ease","emergency","evening","extension",
+"farm","fight","gap","grade","holiday","horror","horse","host","husband","loan","mistake","mountain","nail","noise","occasion","package","patient","pause","phrase","proof",
+"race","relief","sand","sentence","shoulder","smoke","stomach","string","tourist","towel","vacation","west","wheel","wine","arm","aside","associate","bet","blow","border","branch",
+"breast","brother","buddy","bunch","chip","coach","cross","document","draft","dust","expert","floor","god","golf","habit","iron","judge","knife","landscape","league","mail",
+"mess","native","opening","parent","pattern","pin","pool","pound","request","salary","shame","shelter","shoe","silver","tackle","tank","trust","assist","bake","bar","bell",
+"bike","blame","boy","brick","chair","closet","clue","collar","comment","conference","devil","diet","fear","fuel","glove","jacket","lunch","monitor","mortgage","nurse","pace",
+"panic","peak","plane","reward","row","sandwich","shock","spite","spray","surprise","till","transition","weekend","welcome","yard","alarm","bend","bicycle","bite","blind","bottle",
+"cable","candle","clerk","cloud","concert","counter","flower","grandfather","harm","knee","lawyer","leather","load","mirror","neck","pension","plate","purple","ruin","ship","skirt",
+"slice","snow","specialist","stroke","switch","trash","tune","zone","anger","award","bid","bitter","boot","bug","camp","candy","carpet","cat","champion","channel","clock","comfort",
+"cow","crack","engineer","entrance","fault","grass","guy","hell","highlight","incident","island","joke","jury","leg","lip","mate","motor","nerve","passage","pen","pride","priest",
+"prize","promise","resident","resort","ring","roof","rope","sail","scheme","script","sock","station","toe","tower","truck","witness","can","will","other","use","make","good","look",
+"help","go","great","being","still","public","read","keep","start","give","human","local","general","specific","long","play","feel","high","put","common","set","change","simple",
+"past","big","possible","particular","major","personal","current","national","cut","natural","physical","show","try","check","second","call","move","pay","let","increase","single",
+"individual","turn","ask","buy","guard","hold","main","offer","potential","professional","international","travel","cook","alternative","special","working","whole","dance","excuse",
+"cold","commercial","low","purchase","deal","primary","worth","fall","necessary","positive","produce","search","present","spend","talk","creative","tell","cost","drive","green",
+"support","glad","remove","return","run","complex","due","effective","middle","regular","reserve","independent","leave","original","reach","rest","serve","watch","beautiful",
+"charge","active","break","negative","safe","stay","visit","visual","affect","cover","report","rise","walk","white","junior","pick","unique","classic","final","lift","mix",
+"private","stop","teach","western","concern","familiar","fly","official","broad","comfortable","gain","rich","save","stand","young","heavy","lead","listen","valuable","worry",
+"handle","leading","meet","release","sell","finish","normal","press","ride","secret","spread","spring","tough","wait","brown","deep","display","flow","hit","objective","shoot",
+"touch","cancel","chemical","cry","dump","extreme","push","conflict","eat","fill","formal","jump","kick","opposite","pass","pitch","remote","total","treat","vast","abuse","beat",
+"burn","deposit","print","raise","sleep","somewhere","advance","consist","dark","double","draw","equal","fix","hire","internal","join","kill","sensitive","tap","win","attack",
+"claim","constant","drag","drink","guess","minor","pull","raw","soft","solid","wear","weird","wonder","annual","count","dead","doubt","feed","forever","impress","repeat","round",
+"sing","slide","strip","wish","combine","command","dig","divide","equivalent","hang","hunt","initial","march","mention","spiritual","survey","tie","adult","brief","crazy","escape",
+"gather","hate","prior","repair","rough","sad","scratch","sick","strike","employ","external","hurt","illegal","laugh","lay","mobile","nasty","ordinary","respond","royal","senior",
+"split","strain","struggle","swim","train","upper","wash","yellow","convert","crash","dependent","fold","funny","grab","hide","miss","permit","quote","recover","resolve","roll",
+"sink","slip","spare","suspect","sweet","swing","twist","upstairs","usual","abroad","brave","calm","concentrate","estimate","grand","male","mine","prompt","quiet","refuse","regret",
+"reveal","rush","shake","shift","shine","steal","suck","surround","bear","brilliant","dare","dear","delay","drunk","female","hurry","inevitable","invite","kiss","neat","pop","punch",
+"quit","reply","representative","resist","rip","rub","silly","smile","spell","stretch","stupid","tear","temporary","tomorrow","wake","wrap","yesterday","Thomas","Tom","Lieuwe"];
+
+  var name = capFirst(name1[getRandomInt(0, name1.length)]) + ' ' + capFirst(name2[getRandomInt(0, name2.length)]);
+  websiteName = name;
+  return name;
+}
+
+var websiteName;
+
+var newID = 0;
+var counter = () => {
+  newID += 1;
+  return newID
+}
+
+var openTableBoolean = () => {
+  var number = Math.random();
+  return (number < 0.3) ? false : true;
+}
+
+var getHours = () => {
+  var hours = [
+    [""],['07:30-22:00'],['07:30-22:30'],['10:00-22:30'],['10:00-21:00'],
+    ['11:00-16:00'], ['8:00-14:00'], ['14:00-22:00'], ['9:00-21:00']
+  ]
+  var index = Math.floor(Math.random()*hours.length)
+  return hours[index];
+}
+
+// var newLimit = 0;
+
+// var testing = () => {
+//   console.log(newLimit)
+//   if (newLimit < 10000000) {
+//     randomDataGenerator();
+//     newLimit += 70000;
+//   }
+//   else db.db.close();
+// }
+// setInterval(testing, 45000);
+
+
+
+async function randomDataGenerator () {
+  for (let i = 0; i < 10000000; i++) {
+    // console.log(newID)
+    let newRestaurant = new Restaurant({
+      id: counter(),
+      name: generateName(),
+      address: fakerator.address.street(),
+      phone: fakerator.phone.number(),
+      website: `https://www.${websiteName.split(' ').join('')}.com`,
+      openTable: openTableBoolean(),
+      openTableLink: `https://www.opentable.com/r/${websiteName.split(' ').join('')}`,
+      hoursOpen: {
+        Monday: getHours(),
+        Tuesday: getHours(),
+        Wednesday: getHours(),
+        Thursday: getHours(),
+        Friday: getHours(),
+        Saturday: getHours(),
+        Sunday: getHours()
       }
-]
+    });
+    await newRestaurant
+    .save()
+    .then(success => {})
+    .catch(err => {});
+  }
+}
 
-const insertRestaurants = function() {
-  Restaurant.create(restaurantData)
-    .then(() => db.db.close());
-};
-
-insertRestaurants();
-
+randomDataGenerator();
