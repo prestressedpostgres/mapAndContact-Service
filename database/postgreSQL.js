@@ -7,9 +7,9 @@ pool.on('error', (err) => {
 })
 
 const client = new pg.Client({
-  user: 'jared',
+  user: '',
   host: 'localhost',
-  database: 'testing',
+  database: 'postgres',
   password: password,
   port: 9000,
 });
@@ -21,7 +21,7 @@ client.connect(function (err){
 });
 
 const getRestaurants = (request, response) => {
-  client.query('SELECT * FROM restaurants ORDER BY id ASC', (error, results) => {
+  client.query('SELECT * FROM postgresrestaurants ORDER BY id ASC', (error, results) => {
     if (error) {
       throw error
     }
@@ -29,21 +29,21 @@ const getRestaurants = (request, response) => {
   })
 }
 
-const getRestaurantById = (request, response) => {
-  const id = parseInt(request.params.id)
-
-  client.query('SELECT * FROM restaurants WHERE id = $1', [id], (error, results) => {
+const getRestaurantById = (request, response) => { 
+  console.log(request.params.name)
+  client.query(`SELECT * FROM postgresrestaurants WHERE name ='${request.params.name}'`, (error, results) => {
     if (error) {
       throw error
     }
+    console.log(results)
     response.status(200).json(results.rows)
   })
 }
 
 const createRestaurant = (request, response) => {
-  const { name, email } = request.body
+  const {id, name, website, openTable, openTableLink, hoursOpen, address } = request.body
 
-  client.query('INSERT INTO restaurants (name, email) VALUES ($1, $2)', [name, email], (error, results) => {
+  client.query('INSERT INTO postgresrestaurants (name, email) VALUES ($1, $2)', [id, name, website, openTable, openTableLink, hoursOpen, address], (error, results) => {
     if (error) {
       throw error
     }
@@ -53,11 +53,11 @@ const createRestaurant = (request, response) => {
 
 const updateRestaurant = (request, response) => {
   const id = parseInt(request.params.id)
-  const { name, email } = request.body
+  const { name, website, openTable, openTableLink, hoursOpen, address } = request.body
 
   client.query(
-    'UPDATE restaurants SET name = $1, email = $2 WHERE id = $3',
-    [name, email, id],
+    'UPDATE postgresrestaurants SET name = $1, email = $2 WHERE id = $3',
+    [id, name, website, openTable, openTableLink, hoursOpen, address],
     (error, results) => {
       if (error) {
         throw error
@@ -70,7 +70,7 @@ const updateRestaurant = (request, response) => {
 const deleteRestaurant = (request, response) => {
   const id = parseInt(request.params.id)
 
-  client.query('DELETE FROM restaurants WHERE id = $1', [id], (error, results) => {
+  client.query('DELETE FROM postgresrestaurants WHERE id = $1', [id], (error, results) => {
     if (error) {
       throw error
     }

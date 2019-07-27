@@ -3,6 +3,7 @@ const databaseSave = require('./restaurant.js')
 var Fakerator = require("fakerator");
 var fakerator = Fakerator("de-DE");
 const Restaurant = require('./restaurant.js').Restaurant;
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
 function capFirst(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -195,53 +196,66 @@ var openTableBoolean = () => {
 
 var getHours = () => {
   var hours = [
-    [""],['07:30-22:00'],['07:30-22:30'],['10:00-22:30'],['10:00-21:00'],
-    ['11:00-16:00'], ['8:00-14:00'], ['14:00-22:00'], ['9:00-21:00']
+    [""],["07:30-22:00"],["07:30-22:30"],["10:00-22:30"],["10:00-21:00"],
+    ["11:00-16:00"], ["8:00-14:00"], ["14:00-22:00"], ["9:00-21:00"]
   ]
   var index = Math.floor(Math.random()*hours.length)
   return hours[index];
 }
 
-// var newLimit = 0;
+var idIndex = 9000000;
+var pathIndex = 1;
 
-// var testing = () => {
-//   console.log(newLimit)
-//   if (newLimit < 10000000) {
-//     randomDataGenerator();
-//     newLimit += 70000;
-//   }
-//   else db.db.close();
-// }
-// setInterval(testing, 45000);
-
-
-
-async function randomDataGenerator () {
-  for (let i = 0; i < 10000000; i++) {
-    // console.log(newID)
-    let newRestaurant = new Restaurant({
-      id: counter(),
+function randomDataGenerator() {
+  var arrayOfRest = [];
+  for (let i = idIndex; i < 200000 + idIndex; i++) {
+    var dataModel = {
+      id: i+1,
       name: generateName(),
       address: fakerator.address.street(),
       phone: fakerator.phone.number(),
       website: `https://www.${websiteName.split(' ').join('')}.com`,
       openTable: openTableBoolean(),
       openTableLink: `https://www.opentable.com/r/${websiteName.split(' ').join('')}`,
-      hoursOpen: {
-        Monday: getHours(),
-        Tuesday: getHours(),
-        Wednesday: getHours(),
-        Thursday: getHours(),
-        Friday: getHours(),
-        Saturday: getHours(),
-        Sunday: getHours()
-      }
-    });
-    await newRestaurant
-    .save()
-    .then(success => {})
-    .catch(err => {});
+      hoursOpen: `{
+        Monday: ${getHours()},
+        Tuesday: ${getHours()},
+        Wednesday: ${getHours()},
+        Thursday: ${getHours()},
+        Friday: ${getHours()},
+        Saturday: ${getHours()},
+        Sunday: ${getHours()}
+      }`
+    };
+    arrayOfRest.push(dataModel);
   }
+  pathIndex += 1;
+  console.log(pathIndex)
+  idIndex += 200000;
+  return arrayOfRest;
 }
 
-randomDataGenerator();
+const csvWriter = createCsvWriter({
+  path: `C:/Users/jared/Desktop/ghrbld03/Contact-Sidebar/csv-files/tenthBatch.csv`,
+  header: [
+    { id: 'id', title: 'id' },
+    { id: 'name', title: 'name' },
+    { id: 'address', title: 'address' },
+    { id: 'phone', title: 'phone' },
+    { id: 'website', title: 'website' },
+    { id: 'openTable', title: 'openTable' },
+    { id: 'openTableLink', title: 'openTableLink' },
+    { id: 'hoursOpen', title: 'hoursOpen' },
+  ]
+});
+
+
+Promise.resolve()
+    .then(() => csvWriter.writeRecords(randomDataGenerator()))
+    .then(() => csvWriter.writeRecords(randomDataGenerator()))
+    .then(() => csvWriter.writeRecords(randomDataGenerator()))
+    .then(() => csvWriter.writeRecords(randomDataGenerator()))
+    .then(() => csvWriter.writeRecords(randomDataGenerator()))
+    .then(() => console.log('1MM Records!'))
+
+
