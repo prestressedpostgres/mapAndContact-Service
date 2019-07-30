@@ -196,10 +196,10 @@ var openTableBoolean = () => {
 
 var getHours = () => {
   var hours = [
-    [""],["07:30-22:00"],["07:30-22:30"],["10:00-22:30"],["10:00-21:00"],
+    [""], ["07:30-22:00"], ["07:30-22:30"], ["10:00-22:30"], ["10:00-21:00"],
     ["11:00-16:00"], ["8:00-14:00"], ["14:00-22:00"], ["9:00-21:00"]
   ]
-  var index = Math.floor(Math.random()*hours.length)
+  var index = Math.floor(Math.random() * hours.length)
   return hours[index];
 }
 
@@ -210,7 +210,7 @@ function randomDataGenerator() {
   var arrayOfRest = [];
   for (let i = idIndex; i < 200000 + idIndex; i++) {
     var dataModel = {
-      id: i+1,
+      id: i + 1,
       name: generateName(),
       address: fakerator.address.street(),
       phone: fakerator.phone.number(),
@@ -251,11 +251,11 @@ const csvWriter = createCsvWriter({
 
 
 Promise.resolve()
-    .then(() => csvWriter.writeRecords(randomDataGenerator()))
-    .then(() => csvWriter.writeRecords(randomDataGenerator()))
-    .then(() => csvWriter.writeRecords(randomDataGenerator()))
-    .then(() => csvWriter.writeRecords(randomDataGenerator()))
-    .then(() => csvWriter.writeRecords(randomDataGenerator()))
-    .then(() => console.log('1MM Records!'))
+  .then(() => csvWriter.writeRecords(randomDataGenerator()))
+  .then(() => csvWriter.writeRecords(randomDataGenerator()))
+  .then(() => csvWriter.writeRecords(randomDataGenerator()))
+  .then(() => csvWriter.writeRecords(randomDataGenerator()))
+  .then(() => csvWriter.writeRecords(randomDataGenerator()))
+  .then(() => console.log('1MM Records!'))
 
 

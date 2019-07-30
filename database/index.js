@@ -12,16 +12,16 @@ db.once('open', () => {
   console.log(error);
 })
 
-const findRestaurantData = (restaurant,cb) => {
-    Restaurant.find({name:restaurant},(err,doc)=>{
-      if (err) {return cb(err, 'error finding restaurant to display')}
-      return doc ;
-    })
-      .then((restaurantResult) => {
-        return cb(restaurantResult)
-      });
-  };
+const findRestaurantData = (restaurant, cb) => {
+  Restaurant.find({ name: restaurant }, (err, doc) => {
+    if (err) { return cb(err, 'error finding restaurant to display') }
+    return doc;
+  })
+    .then((restaurantResult) => {
+      return cb(restaurantResult)
+    });
+};
 
 
 
-module.exports = {db, findRestaurantData}
+module.exports = { db, findRestaurantData }

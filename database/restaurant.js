@@ -13,26 +13,25 @@ const restaurantSchema = new mongoose.Schema({
 });
 const Restaurant = mongoose.model('Restaurant', restaurantSchema);
 
-
+//saves a restaurant to a mongoDB __ Used when seeding the database
 let saveToDB = (restaurant, callback) => {
-    let newRestaurants = new Restaurant({
-      id: restaurant.id,
-      name: restaurant.name,
-      address: restaurant.address,
-      phone: restaurant.phone,
-      website: restaurant.website,
-      openTable: restaurant.openTable,
-      openTableLink: restaurant.openTableLink,
-      hoursOpen: restaurant.hoursOpen
-    })
-    newRestaurants.save(err => {
-      if (err) console.log(err)
-    })
+  let newRestaurants = new Restaurant({
+    id: restaurant.id,
+    name: restaurant.name,
+    address: restaurant.address,
+    phone: restaurant.phone,
+    website: restaurant.website,
+    openTable: restaurant.openTable,
+    openTableLink: restaurant.openTableLink,
+    hoursOpen: restaurant.hoursOpen
+  })
+  newRestaurants.save(err => {
+    if (err) console.log(err)
+  })
 }
 
+//checked to see if a restaurant with the id already exists - saves the restaurant if no restaurant is returned
 let save = (restaurant, callback) => {
-
-  // console.log(restaurant.id)
   Restaurant.find({ id: restaurant.id }).exec((err, result) => {
     // console.log(restaurant)
     if (err) return err;
@@ -55,8 +54,8 @@ let save = (restaurant, callback) => {
   })
 }
 
+//searches for a restaurant by id - deletes the restaurant if a restaurant is returned 
 let deleteEntry = (restaurant, callback) => {
-  
   Restaurant.find({ id: restaurant.id }).exec((err, result) => {
     if (err) throw err;
     if (result.length === 0) throw new Error('No data!');
@@ -69,4 +68,4 @@ let deleteEntry = (restaurant, callback) => {
   });
 }
 
-module.exports = {save, Restaurant, deleteEntry, saveToDB}
+module.exports = { save, Restaurant, deleteEntry, saveToDB }
