@@ -26,7 +26,7 @@ client.connect(function (err) {
 
 //gets all restaurants from the database -- do not recommend using
 const getRestaurants = (request, response) => {
-  client.query('SELECT * FROM postgresrestaurants ORDER BY id ASC', (error, results) => {
+  client.query('SELECT id FROM postgresrestaurants ORDER BY id ASC', (error, results) => {
     if (error) {
       throw error
     }
@@ -37,6 +37,7 @@ const getRestaurants = (request, response) => {
 //gets a restaurant by id
 const getRestaurantById = (request, response) => {
   var id = request.params.id;
+  console.log(id)
   client.query(`SELECT * FROM postgresrestaurants WHERE id = '${id}'`, (error, results) => {
     if (error) {
       throw error
@@ -47,7 +48,6 @@ const getRestaurantById = (request, response) => {
 
 //creates a new restaurant. Only allows user to post if the id does not already exist
 const createRestaurant = (request, response) => {
-  console.log(request.body.name)
   client.query(`INSERT INTO postgresrestaurants (id, name, address, phone, website, openTable, openTableLink, hoursOpen) VALUES (${request.body.id},\ 
     '${request.body.name}', '${request.body.address}', '${request.body.phone}', '${request.body.website}',\
     '${request.body.openTable}', '${request.body.openTableLink}', '${request.body.hoursOpen}')`, (error, results) => {
