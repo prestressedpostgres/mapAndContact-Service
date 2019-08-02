@@ -1,0 +1,15 @@
+config:
+  target: 'http://localhost:4000'
+  phases:
+    - duration: 20
+      arrivalRate: 1000
+scenarios:
+  - flow:
+    - get:
+        url: '/pg/restaurant/9900010'
+    # - del:
+    #     url: '/pg/restaurant/10000006'
+    - put:
+        url: '/pg/restaurant/9900011' 
+        json:  
+          "name": "Quixotic Mate"
