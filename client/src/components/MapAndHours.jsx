@@ -66,7 +66,7 @@ class MapAndHours extends React.Component {
 
   loadRestaurant() {
     //TODO change route to docker container 
-    return axios.get(`http://localhost:4000/pg/restaurant/${this.state.id}`)
+    return axios.get(`/pg/restaurant/${this.state.id}`)
       .then(function (response) {
         return (response.data);
       });
