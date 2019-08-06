@@ -3,13 +3,13 @@ const password = require('../.config.js').DATABASE_PASSWORD
 
 
 //helps handle concurrent connections
-const pool = new pg.Pool()
-pool.on('error', (err) => {
-  console.error('An idle client has experienced an error', err.stack)
-})
+// const pool = new pg.Pool()
+// pool.on('error', (err) => {
+//   console.error('An idle client has experienced an error', err.stack)
+// })
 
 //new client with my credentials 
-const client = new pg.Client({
+const pool = new pg.Pool({
   user: '',
   host: 'localhost',
   database: 'postgres',
@@ -17,7 +17,7 @@ const client = new pg.Client({
   port: 9000,
 });
 
-client.connect(function (err) {
+pool.connect(function (err) {
   if (err)
     console.log(err);
   else
@@ -26,7 +26,7 @@ client.connect(function (err) {
 
 //gets all restaurants from the database -- do not recommend using
 const getRestaurants = (request, response) => {
-  client.query('SELECT id FROM postgresrestaurants ORDER BY id ASC', (error, results) => {
+  pool.query('SELECT id FROM postgresrestaurants ORDER BY id ASC', (error, results) => {
     if (error) {
       throw error
     }
@@ -38,7 +38,7 @@ const getRestaurants = (request, response) => {
 const getRestaurantById = (request, response) => {
   var id = request.params.id;
   console.log(id)
-  client.query(`SELECT * FROM postgresrestaurants WHERE id = '${id}'`, (error, results) => {
+  pool.query(`SELECT * FROM postgresrestaurants WHERE id = '${id}'`, (error, results) => {
     if (error) {
       throw error
     }
@@ -48,7 +48,7 @@ const getRestaurantById = (request, response) => {
 
 //creates a new restaurant. Only allows user to post if the id does not already exist
 const createRestaurant = (request, response) => {
-  client.query(`INSERT INTO postgresrestaurants (id, name, address, phone, website, openTable, openTableLink, hoursOpen) VALUES (${request.body.id},\ 
+  pool.query(`INSERT INTO postgresrestaurants (id, name, address, phone, website, openTable, openTableLink, hoursOpen) VALUES (${request.body.id},\ 
     '${request.body.name}', '${request.body.address}', '${request.body.phone}', '${request.body.website}',\
     '${request.body.openTable}', '${request.body.openTableLink}', '${request.body.hoursOpen}')`, (error, results) => {
       if (error) {
@@ -63,7 +63,7 @@ const updateRestaurant = (request, response) => {
   const id = parseInt(request.params.id)
   const { name, address, phone, website, openTable, openTableLink, hoursOpen } = request.body
 
-  client.query(
+  pool.query(
     `UPDATE postgresrestaurants SET name = $1, address = $2, phone = $3, website = $4, openTable = $5, openTableLink = $6, hoursOpen = $7 WHERE id = ${id}`,
     [name, address, phone, website, openTable, openTableLink, hoursOpen],
     (error, results) => {
@@ -79,7 +79,7 @@ const updateRestaurant = (request, response) => {
 const deleteRestaurant = (request, response) => {
   const id = parseInt(request.params.id)
 
-  client.query('DELETE FROM postgresrestaurants WHERE id = $1', [id], (error, results) => {
+  pool.query('DELETE FROM postgresrestaurants WHERE id = $1', [id], (error, results) => {
     if (error) {
       throw error
     }
