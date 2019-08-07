@@ -16,7 +16,7 @@ class MapAndHours extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: 9900010,
+      id: 99000,
       currentRestaurant: 'CENTRO',
       restaurantData: null,
       dailyHoursHidden: true,
@@ -38,6 +38,7 @@ class MapAndHours extends React.Component {
           this.setIsOpen(restaurant)
         }
       )
+    window.history.pushState("","", `/pg/restaurant/${this.state.id}`)
   }
 
   setDate() {
@@ -51,7 +52,7 @@ class MapAndHours extends React.Component {
 
   setIsOpen(restaurant) {
     let currentTimeArray = this.state.dayAndTime
-    let dayStringArray = getDaysHours(currentTimeArray[0], restaurant.hoursOpen)
+    let dayStringArray = getDaysHours(currentTimeArray[0], restaurant.hoursopen)
     let isOpen = compareTime(currentTimeArray, dayStringArray)
     this.setState({
       isOpen: isOpen
@@ -84,27 +85,27 @@ class MapAndHours extends React.Component {
   render() {
     return (
       <div className="contactBar">
-        <div>
+        <div className="openNow"><div className='clock'><i className="far fa-clock"></i></div>
           <Hours
-            clickHandler={this.toggleDailyHours.bind(this)}
+            clickHandler={(e) => this.toggleDailyHours(e)}
             dayAndTime={this.state.dayAndTime}
             isOpen={this.state.isOpen}
-            weekHours={this.state.restaurantData && this.state.restaurantData.hoursOpen || 'Loading'}
+            weekHours={this.state.restaurantData && this.state.restaurantData.hoursopen || 'Loading'}
           />
         </div>
         <div>
-          {!this.state.dailyHoursHidden && <WeeklyHours hours={this.state.restaurantData && this.state.restaurantData.hoursOpen || 'Loading'} />}
+          {!this.state.dailyHoursHidden && <WeeklyHours hours={this.state.restaurantData && this.state.restaurantData.hoursopen || 'Loading'} />}
         </div>
-        <div>
+        <div className="address"><div className='coordinate'><i className="fas fa-map-marker-alt"></i></div>
           <Location location={this.state.restaurantData && this.state.restaurantData.address || 'Loading'} />
         </div>
-        <div>
+        <div className="phone"><div className='telephone'><i className="fas fa-phone"></i></div>
           <Phone phone={this.state.restaurantData && this.state.restaurantData.phone || 'Loading'} />
         </div>
-        <div>
+        <div className="link"><div className="window"><i className="far fa-window-maximize"></i></div>
           <WebLink website={this.state.restaurantData && this.state.restaurantData.website || 'Loading'} />
         </div>
-        <div>
+        <div className="directionContainer"><div className="direction"><i className="fas fa-directions"></i></div>
           <Directions />
         </div>
       </div>
