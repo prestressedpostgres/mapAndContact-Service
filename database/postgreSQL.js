@@ -37,7 +37,6 @@ const getRestaurants = (request, response) => {
 //gets a restaurant by id
 const getRestaurantById = (request, response) => {
   var id = request.params.id;
-  console.log(id)
   pool.query(`SELECT * FROM postgresrestaurants WHERE id = '${id}'`, (error, results) => {
     if (error) {
       throw error
