@@ -85,7 +85,7 @@ class MapAndHours extends React.Component {
   render() {
     return (
       <div className="contactBar">
-        <div className="openNow"><div className='clock'><i className="far fa-clock"></i></div>
+        <div className="openNow"><div className='clock'><i className="faIcons far fa-clock"></i></div>
           <Hours
             clickHandler={(e) => this.toggleDailyHours(e)}
             dayAndTime={this.state.dayAndTime}
@@ -96,16 +96,16 @@ class MapAndHours extends React.Component {
         <div>
           {!this.state.dailyHoursHidden && <WeeklyHours hours={this.state.restaurantData && this.state.restaurantData.hoursopen || 'Loading'} />}
         </div>
-        <div className="address"><div className='coordinate'><i className="fas fa-map-marker-alt"></i></div>
+        <div className="address"><div className='coordinate'><i className="faIcons fas fa-map-marker-alt"></i></div>
           <Location location={this.state.restaurantData && this.state.restaurantData.address || 'Loading'} />
         </div>
-        <div className="phone"><div className='telephone'><i className="fas fa-phone"></i></div>
+        <div className="phone"><div className='telephone'><i className="faIcons fas fa-phone"></i></div>
           <Phone phone={this.state.restaurantData && this.state.restaurantData.phone || 'Loading'} />
         </div>
-        <div className="link"><div className="window"><i className="far fa-window-maximize"></i></div>
+        <div className="link"><div className="window"><i className="faIcons far fa-window-maximize"></i></div>
           <WebLink website={this.state.restaurantData && this.state.restaurantData.website || 'Loading'} />
         </div>
-        <div className="directionContainer"><div className="direction"><i className="fas fa-directions"></i></div>
+        <div className="directionContainer"><div className="direction"><i className="faIcons fas fa-directions"></i></div>
           <Directions />
         </div>
       </div>
